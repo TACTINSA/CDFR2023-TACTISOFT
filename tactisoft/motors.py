@@ -26,14 +26,15 @@ class Direction(IntEnum):
 
 
 def compute_rotation(direction: Direction, speed: int):
-    """Compute motor rotation (direction + speed [0 - 127]). Return 1 byte (8 bits) encoded in hex. The highest bit indicates the direction, and the 7 lowest bits indicate 128 speed gears."""
-    assert 0 < speed < 127, "speed must be a number in range [0 - 127]"
+    """Compute motor rotation (direction + speed [0 - 127]). Return 1 byte (8 bits) encoded in hex. The highest bit
+    indicates the direction, and the 7 lowest bits indicate 128 speed gears. """
+    assert 0 < speed < 127, f"speed must be a number in range [0 - 127]. Currently speed is {speed}"
     return f"{(direction << 7) | speed:02x}"
 
 
 def compute_distance(distance: int):
     """Compute the distance (number of pulse [0 - 2^64]). Return 4 bytes encoded in hex."""
-    assert 0 < distance < 2 ** 64, "distance must be a number in range [0 - 2^64]"
+    assert 0 < distance < 2 ** 64, f"distance must be a number in range [0 - 2^64]. Currently distance is {distance}"
     return wrap(f"{distance:08x}", 2)  # wrap(..., 2) split the result by bytes
 
 
