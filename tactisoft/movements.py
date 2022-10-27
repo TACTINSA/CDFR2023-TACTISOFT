@@ -22,7 +22,7 @@ class MecanumMovement:
         front_right_and_back_left = math.sin(angle - math.pi / 4) * speed
         front_left_and_back_right = math.sin(angle + math.pi / 4) * speed
 
-        if front_right_and_back_left != 0:
+        if abs(int(front_right_and_back_left)) != 0:
             self.send_command(motors.move(motor_id=self.motor_ids.front_right,
                                           direction=get_direction(front_right_and_back_left, True),
                                           speed=abs(int(front_right_and_back_left)),
@@ -35,7 +35,7 @@ class MecanumMovement:
             self.send_command(motors.stop(self.motor_ids.front_right))
             self.send_command(motors.stop(self.motor_ids.back_left))
 
-        if front_left_and_back_right != 0:
+        if abs(int(front_left_and_back_right)) != 0:
             self.send_command(motors.move(motor_id=self.motor_ids.front_left,
                                           direction=get_direction(front_left_and_back_right, False),
                                           speed=abs(int(front_left_and_back_right)),
