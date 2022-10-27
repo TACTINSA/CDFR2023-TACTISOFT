@@ -37,8 +37,3 @@ if __name__ == '__main__':
         robot.match_started.wait()
     else:
         robot.match_started.set()
-
-    robot.movement.forward(-80)
-
-    while True:
-        pass
