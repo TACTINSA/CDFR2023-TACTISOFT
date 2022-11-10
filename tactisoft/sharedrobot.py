@@ -1,6 +1,7 @@
 import logging
 import threading
 
+from tactisoft.cli import NonBlockingCLI
 from tactisoft.threadedserial import ThreadedSerial
 
 
@@ -19,3 +20,6 @@ class SharedRobot:
             return False  # If not handled, return false
 
         return True  # If handled, return true
+
+    def register_commands(self, cli: NonBlockingCLI):
+        pass

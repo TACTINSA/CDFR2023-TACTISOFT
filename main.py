@@ -3,13 +3,29 @@ import logging
 from time import sleep
 
 from robot.robot import Robot
+from tactisoft.cli import NonBlockingCLI
+
+should_stop = False
+cli = None
+robot = None
+
+
+def set_stop(_should_stop):
+    global should_stop
+    should_stop = _should_stop
+
+
+def launch_strategy(_strategy, _robot):
+    getattr(__import__("strategies.%s" % _strategy, fromlist=["run"]), "run")(_robot)
+
 
 if __name__ == '__main__':
     # All options that can be passed as parameter are defined here
     parser = argparse.ArgumentParser(description='TACTISOFT v2.0 - CDR 2023 - TACTINSA')
-    parser.add_argument('--strategy', help='Run the strategy with the given name')
-    parser.add_argument('--cli', action='store_true', help='Provide control commands in console')
-    parser.add_argument('--server', action='store_true', help='Provide remote control')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument('--strategy', help='Run the strategy with the given name')
+    group.add_argument('--cli', action='store_true', help='Provide control commands in console')
+    group.add_argument('--server', action='store_true', help='Provide remote control')
     parser.add_argument('--no-collision', action='store_true', help='Disable all collisions detection')
     parser.add_argument('--no-startup', action='store_true', help='Bypass the startup process')
     parser.add_argument('--log-level', choices=["debug", "info", "warning", "error", "critical"], help='Set the logging level', default="info")
@@ -39,5 +55,14 @@ if __name__ == '__main__':
     # Run the strategy
     if args.strategy:
         # launch the run(robot: Robot) function from the python file in strategies folder with args.strategy as name
-        getattr(__import__("strategies.%s" % args.strategy, fromlist=["run"]), "run")(robot)
+        launch_strategy(args.strategy, robot)
+    elif args.cli:
+        cli = NonBlockingCLI()  # Init the cli for the robot to register commands
+        robot.register_commands(cli)
+        cli.register_command("exit", lambda: set_stop(True), "Exit the program", "exit")
+        cli.register_command("strategy", lambda x: launch_strategy(x, robot), "Exit the program", "exit")
+        cli.start()  # Start processing the cli commands
 
+        while not should_stop:
+            sleep(0.1)
+        cli.stop()
