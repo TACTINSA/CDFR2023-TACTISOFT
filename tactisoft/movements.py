@@ -30,6 +30,8 @@ class MecanumMovement:
 
     def move(self, direction: Optional[float], speed: int, turn: float = 0, distance: int = None):
         """Move the robot in the given direction (in radians) for the specified distance or indefinitely if none given and turn [-1; 1]"""
+        assert speed > 0, "Speed must be positive"
+
         if direction is not None:
             front_right_and_back_left = math.sin(direction - math.pi / 4)
             front_left_and_back_right = math.sin(direction + math.pi / 4)
