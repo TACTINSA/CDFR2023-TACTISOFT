@@ -3,8 +3,6 @@ import logging
 from time import sleep
 
 from robot.robot import Robot
-from tactisoft import motors
-from tactisoft.motors import Direction
 
 if __name__ == '__main__':
     # All options that can be passed as parameter are defined here
