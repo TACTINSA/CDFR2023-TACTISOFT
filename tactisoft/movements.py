@@ -19,12 +19,13 @@ class MecanumMovement:
     def send_command(self, command):
         self.serial.send(bytes.fromhex(command))
 
-    def move_wheel(self, motor_id: str, speed: float, direction: bool):
+    def move_wheel(self, motor_id: str, speed: float, direction: bool, distance: int = None):
         logging.debug("Moving motor %s in direction %f at speed %d" % (motor_id, direction, speed))
         if abs(int(speed)) != 0:
             self.send_command(motors.move(motor_id=motor_id,
                                           direction=get_direction(speed, direction),
-                                          speed=abs(int(speed))))
+                                          speed=abs(int(speed)),
+                                          distance=distance))
         else:
             self.send_command(motors.stop(motor_id))
 
@@ -51,10 +52,10 @@ class MecanumMovement:
             back_right /= max_value
             back_left /= max_value
 
-        self.move_wheel(self.motor_ids.front_right, front_right * speed, True)
-        self.move_wheel(self.motor_ids.front_left, front_left * speed, False)
-        self.move_wheel(self.motor_ids.back_right, back_right * speed, True)
-        self.move_wheel(self.motor_ids.back_left, back_left * speed, False)
+        self.move_wheel(self.motor_ids.front_right, front_right * speed, True, distance)
+        self.move_wheel(self.motor_ids.front_left, front_left * speed, False, distance)
+        self.move_wheel(self.motor_ids.back_right, back_right * speed, True, distance)
+        self.move_wheel(self.motor_ids.back_left, back_left * speed, False, distance)
 
     def forward(self, speed: int, distance: int = None):
         self.move(direction=math.pi / 2, speed=speed, distance=distance)
