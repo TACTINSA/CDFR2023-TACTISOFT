@@ -1,3 +1,4 @@
+import logging
 import math
 
 from tactisoft import motors
@@ -17,45 +18,49 @@ class MecanumMovement:
     def send_command(self, command):
         self.serial.send(bytes.fromhex(command))
 
-    def move(self, angle: float, speed: int, rotation: float = 0, distance: int = None):
-        """Move the robot in the given angle (in radians) for the specified distance or indefinitely if none given"""
-        front_right_and_back_left = math.sin(angle - math.pi / 4) * speed
-        front_left_and_back_right = math.sin(angle + math.pi / 4) * speed
-
-        if abs(int(front_right_and_back_left)) != 0:
-            self.send_command(motors.move(motor_id=self.motor_ids.front_right,
-                                          direction=get_direction(front_right_and_back_left, True),
-                                          speed=abs(int(front_right_and_back_left)),
-                                          distance=distance))
-            self.send_command(motors.move(motor_id=self.motor_ids.back_left,
-                                          direction=get_direction(front_right_and_back_left, False),
-                                          speed=abs(int(front_right_and_back_left)),
-                                          distance=distance))
+    def move_wheel(self, motor_id: str, speed: float, direction: bool):
+        logging.debug("Moving motor %s in direction %f at speed %d" % (motor_id, direction, speed))
+        if abs(int(speed)) != 0:
+            self.send_command(motors.move(motor_id=motor_id,
+                                          direction=get_direction(speed, direction),
+                                          speed=abs(int(speed))))
         else:
-            self.send_command(motors.stop(self.motor_ids.front_right))
-            self.send_command(motors.stop(self.motor_ids.back_left))
+            self.send_command(motors.stop(motor_id))
 
-        if abs(int(front_left_and_back_right)) != 0:
-            self.send_command(motors.move(motor_id=self.motor_ids.front_left,
-                                          direction=get_direction(front_left_and_back_right, False),
-                                          speed=abs(int(front_left_and_back_right)),
-                                          distance=distance))
-            self.send_command(motors.move(motor_id=self.motor_ids.back_right,
-                                          direction=get_direction(front_left_and_back_right, True),
-                                          speed=abs(int(front_left_and_back_right)),
-                                          distance=distance))
+    def move(self, direction: float, speed: int, turn: float = 0, distance: int = None):
+        """Move the robot in the given direction (in radians) for the specified distance or indefinitely if none given and turn [-1; 1]"""
+        if direction is not None:
+            front_right_and_back_left = math.sin(direction - math.pi / 4)
+            front_left_and_back_right = math.sin(direction + math.pi / 4)
         else:
-            self.send_command(motors.stop(self.motor_ids.front_left))
-            self.send_command(motors.stop(self.motor_ids.back_right))
+            front_right_and_back_left = 0
+            front_left_and_back_right = 0
+
+        front_right = front_right_and_back_left + turn
+        front_left = front_left_and_back_right - turn
+        back_right = front_left_and_back_right + turn
+        back_left = front_right_and_back_left - turn
+
+        max_value = max(abs(front_right), abs(front_left), abs(back_right), abs(back_left))
+        if max_value > 1:
+            front_right /= max_value
+            front_left /= max_value
+            back_right /= max_value
+            back_left /= max_value
+
+        self.move_wheel(self.motor_ids.front_right, front_right * speed, True)
+        self.move_wheel(self.motor_ids.front_left, front_left * speed, False)
+        self.move_wheel(self.motor_ids.back_right, back_right * speed, True)
+        self.move_wheel(self.motor_ids.back_left, back_left * speed, False)
 
     def forward(self, speed: int, distance: int = None):
-        self.move(angle=math.pi / 2, speed=speed, distance=distance)
+        self.move(direction=math.pi / 2, speed=speed, distance=distance)
 
     def backward(self, speed: int, distance: int = None):
-        self.move(angle=3 * math.pi / 2, speed=speed, distance=distance)
+        self.move(direction=3 * math.pi / 2, speed=speed, distance=distance)
 
     def right(self, speed: int, distance: int = None):
-        self.move(angle=0, speed=speed, distance=distance)
+        self.move(direction=0, speed=speed, distance=distance)
 
     def left(self, speed: int, distance: int = None):
-        self.move(angle=math.pi, speed=speed, distance=distance)
+        self.move(direction=math.pi, speed=speed, distance=distance)
