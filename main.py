@@ -12,7 +12,7 @@ if __name__ == '__main__':
     parser.add_argument('--server', action='store_true', help='Provide remote control')
     parser.add_argument('--no-collision', action='store_true', help='Disable all collisions detection')
     parser.add_argument('--no-startup', action='store_true', help='Bypass the startup process')
-    parser.add_argument('--log-level', choices=["debug", "info", "warning", "error", "critical"], help='Set the logging level')
+    parser.add_argument('--log-level', choices=["debug", "info", "warning", "error", "critical"], help='Set the logging level', default="info")
     args = parser.parse_args()
 
     # Set the logging level from the argparse argument
