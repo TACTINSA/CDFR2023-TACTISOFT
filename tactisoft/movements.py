@@ -1,5 +1,6 @@
 import logging
 import math
+from typing import Optional
 
 from tactisoft import motors
 from tactisoft.motors import Motors4, Direction
@@ -27,7 +28,7 @@ class MecanumMovement:
         else:
             self.send_command(motors.stop(motor_id))
 
-    def move(self, direction: float, speed: int, turn: float = 0, distance: int = None):
+    def move(self, direction: Optional[float], speed: int, turn: float = 0, distance: int = None):
         """Move the robot in the given direction (in radians) for the specified distance or indefinitely if none given and turn [-1; 1]"""
         if direction is not None:
             front_right_and_back_left = math.sin(direction - math.pi / 4)
@@ -36,10 +37,10 @@ class MecanumMovement:
             front_right_and_back_left = 0
             front_left_and_back_right = 0
 
-        front_right = front_right_and_back_left + turn
-        front_left = front_left_and_back_right - turn
-        back_right = front_left_and_back_right + turn
-        back_left = front_right_and_back_left - turn
+        front_right = front_right_and_back_left - turn
+        front_left = front_left_and_back_right + turn
+        back_right = front_left_and_back_right - turn
+        back_left = front_right_and_back_left + turn
 
         max_value = max(abs(front_right), abs(front_left), abs(back_right), abs(back_left))
         if max_value > 1:
@@ -64,3 +65,15 @@ class MecanumMovement:
 
     def left(self, speed: int, distance: int = None):
         self.move(direction=math.pi, speed=speed, distance=distance)
+
+    def turn_right(self, speed: int, distance: int = None):
+        self.move(direction=None, speed=speed, turn=1, distance=distance)
+
+    def turn_left(self, speed: int, distance: int = None):
+        self.move(direction=None, speed=speed, turn=-1, distance=distance)
+
+    def stop(self):
+        self.send_command(motors.stop(self.motor_ids.front_right))
+        self.send_command(motors.stop(self.motor_ids.front_left))
+        self.send_command(motors.stop(self.motor_ids.back_right))
+        self.send_command(motors.stop(self.motor_ids.back_left))

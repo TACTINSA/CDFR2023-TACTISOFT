@@ -36,3 +36,8 @@ if __name__ == '__main__':
     else:
         robot.match_started.set()
 
+    # Run the strategy
+    if args.strategy:
+        # launch the run(robot: Robot) function from the python file in strategies folder with args.strategy as name
+        getattr(__import__("strategies.%s" % args.strategy, fromlist=["run"]), "run")(robot)
+
