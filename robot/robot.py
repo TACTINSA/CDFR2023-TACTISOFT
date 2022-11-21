@@ -25,8 +25,8 @@ class Robot(SharedRobot):
 
     def register_commands(self, cli: NonBlockingCLI):
         super().register_commands(cli)
-        cli.register_command("move", lambda x, y, z: self.movement.move(float(x), int(y), float(z)), "Move in the given direction (in radians) at the given speed and turn [-1; 1]",
-                             "move <direction> <speed> <turn>")
+        cli.register_command("move", lambda x, y, z: self.movement.move(None if x == "null" else float(x), int(y), float(z)),
+                             "Move in the given direction (in radians) at the given speed and turn [-1; 1]", "move <direction> <speed> <turn>")
         cli.register_command("forward", lambda x: self.movement.forward(int(x)), "Move forward at the given speed", "forward <speed>")
         cli.register_command("backward", lambda x: self.movement.backward(int(x)), "Move backward at the given speed", "backward <speed>")
         cli.register_command("right", lambda x: self.movement.right(int(x)), "Move right at the given speed", "right <speed>")

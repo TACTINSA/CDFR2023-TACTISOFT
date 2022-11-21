@@ -39,12 +39,15 @@ class NonBlockingCLI:
     def run(self):
         while self.running:
             command = input(self.prompt)
-            command = command.split(' ')
-            if command[0].lower() in self.commands:
-                if len(command) - 1 >= self.commands[command[0]]['nb_args']:
-                    self.commands[command[0]]['callback'](*command[1:])
-                else:
-                    logging.info("Invalid number of arguments. Got %d, expected %d" % (len(command) - 1, self.commands[command[0]]['nb_args']))
+            self.process_command(command)
+
+    def process_command(self, command):
+        command = command.split(' ')
+        if command[0].lower() in self.commands:
+            if len(command) - 1 >= self.commands[command[0]]['nb_args']:
+                self.commands[command[0]]['callback'](*command[1:])
             else:
-                logging.info("Unknown command: %s" % command)
-            sleep(0.1)
+                logging.info("Invalid number of arguments. Got %d, expected %d" % (len(command) - 1, self.commands[command[0]]['nb_args']))
+        else:
+            logging.info("Unknown command: %s" % command)
+        sleep(0.1)

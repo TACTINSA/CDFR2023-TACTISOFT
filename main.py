@@ -4,6 +4,7 @@ from time import sleep
 
 from robot.robot import Robot
 from tactisoft.cli import NonBlockingCLI
+import tactisoft.server as server
 
 should_stop = False
 cli = None
@@ -52,17 +53,20 @@ if __name__ == '__main__':
     else:
         robot.match_started.set()
 
-    # Run the strategy
-    if args.strategy:
+    if args.strategy:  # Run the strategy
         # launch the run(robot: Robot) function from the python file in strategies folder with args.strategy as name
         launch_strategy(args.strategy, robot)
-    elif args.cli:
+    elif args.cli or args.server:  # or start the CLI and/or the server
         cli = NonBlockingCLI()  # Init the cli for the robot to register commands
         robot.register_commands(cli)
         cli.register_command("exit", lambda: set_stop(True), "Exit the program", "exit")
         cli.register_command("strategy", lambda x: launch_strategy(x, robot), "Exit the program", "exit")
-        cli.start()  # Start processing the cli commands
 
-        while not should_stop:
-            sleep(0.1)
-        cli.stop()
+        if args.cli:  # Start processing the cli commands in the terminal
+            cli.start()
+            while not should_stop:
+                sleep(0.1)
+            cli.stop()
+
+        if args.server:  # Start the server
+            server.run_forever(cli)
