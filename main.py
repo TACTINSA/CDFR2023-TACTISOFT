@@ -50,7 +50,6 @@ if __name__ == '__main__':
     robot.arduino.send("R2+INIT")
     logging.info("%s is initialized" % robot.name)
 
-    import tactisoft.line_following
     if not args.no_startup:
         logging.info("Waiting for match start")
         robot.match_started.wait()
