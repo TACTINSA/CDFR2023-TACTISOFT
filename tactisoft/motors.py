@@ -65,3 +65,9 @@ def stop(motor_id: str):
     command = [motor_id, "f7"]
     command.append(compute_validation(command))
     return " ".join(command)
+
+
+def generate_command_with_validation(command: List[str]) -> str:
+    """Compute the command to stop a motor"""
+    command.append(compute_validation(command))
+    return " ".join(command)

@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
+
 import argparse
 import logging
 from time import sleep
 
 from robot.robot import Robot
+from robot.robot2 import Robot2
 from tactisoft.cli import NonBlockingCLI
 import tactisoft.server as server
 

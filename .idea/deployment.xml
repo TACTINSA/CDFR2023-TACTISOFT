@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="pi@192.168.43.17:22 password" remoteFilesAllowedToDisappearOnAutoupload="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="r2@192.168.43.103:22 password" remoteFilesAllowedToDisappearOnAutoupload="false">
     <serverData>
       <paths name="pi@192.168.43.17:22 password">
         <serverdata>
           <mappings>
             <mapping deploy="/home/pi/testing_denis" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="r2@192.168.43.103:22 password">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/home/r2/testing_denis" local="$PROJECT_DIR$" />
           </mappings>
         </serverdata>
       </paths>
