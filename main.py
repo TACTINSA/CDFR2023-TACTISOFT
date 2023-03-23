@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 import argparse
+import asyncio
 import logging
 from time import sleep
 
 from robot.robot import Robot
-from robot.robot2 import Robot2
 from tactisoft.cli import NonBlockingCLI
 import tactisoft.server as server
 
@@ -20,7 +20,7 @@ def set_stop(_should_stop):
 
 
 def launch_strategy(_strategy, _robot):
-    getattr(__import__("strategies.%s" % _strategy, fromlist=["run"]), "run")(_robot)
+    asyncio.run(getattr(__import__("strategies.%s" % _strategy, fromlist=["run"]), "run")(_robot))
 
 
 if __name__ == '__main__':
@@ -47,7 +47,8 @@ if __name__ == '__main__':
     robot = Robot()
 
     sleep(1)  # Wait for the robot to be fully initialized before continuing
-    robot.arduino.send("R2+INIT")
+    robot.arduino.send("R2+set_ir_direction=none")
+    # robot.arduino.send("R2+INIT")
     logging.info("%s is initialized" % robot.name)
 
     if not args.no_startup:
@@ -55,6 +56,7 @@ if __name__ == '__main__':
         robot.match_started.wait()
     else:
         robot.match_started.set()
+    # robot.follow_line()
 
     if args.strategy:  # Run the strategy
         # launch the run(robot: Robot) function from the python file in strategies folder with args.strategy as name

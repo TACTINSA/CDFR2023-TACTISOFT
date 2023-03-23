@@ -23,7 +23,7 @@ class ThreadedSerial:
                     data = self.serial.readline().decode("utf-8").strip()
                     if not data.startswith(self.prefix):
                         logging.warning("Received invalid message: " + data)
-                        return
+                        continue
                     data = data[3:]
                 else:
                     data = self.serial.read(self.serial.inWaiting())

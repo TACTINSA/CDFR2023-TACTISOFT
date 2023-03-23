@@ -10,7 +10,7 @@ class SharedRobot:
 
     def __init__(self, name):
         self.name = name
-        self.arduino = ThreadedSerial("/dev/ttyUSB1", 9600, on_message=self.on_arduino_message, raw=False, prefix="R2+")
+        self.arduino = ThreadedSerial("/dev/arduino", 9600, on_message=self.on_arduino_message, raw=False, prefix="R2+")
 
     def on_arduino_message(self, message) -> bool:
         logging.debug("Arduino -> Robot: " + message)
@@ -22,4 +22,4 @@ class SharedRobot:
         return True  # If handled, return true
 
     def register_commands(self, cli: NonBlockingCLI):
-        pass
+        cli.register_command("arduino_raw", lambda x: self.arduino.send(x), "Send a raw command to the arduino", "arduino_raw <command>")
