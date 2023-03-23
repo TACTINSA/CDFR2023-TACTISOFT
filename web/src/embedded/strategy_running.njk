@@ -1,0 +1,17 @@
+---
+# @formatter:off
+layout: embedded_layout.njk
+title: "Strategies"
+# @formatter:on
+---
+<div id="strategies" class="flex flex-grow flex-wrap">
+    <div class="basis-full bg-blue-700 flex items-center justify-center text-3xl select-none">
+        Running strategy <span id="strategy" class="ml-2 font-bold"></span>
+    </div>
+</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const strategy = urlParams.get('strategy')
+    document.getElementById("strategy").innerText = strategy;
+</script>

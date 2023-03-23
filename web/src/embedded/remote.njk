@@ -1,0 +1,24 @@
+---
+# @formatter:off
+layout: embedded_layout.njk
+title: "Accès à distance"
+# @formatter:on
+---
+<div id="remote" class="flex flex-grow flex-wrap">
+    <div class="basis-full bg-yellow-500 flex items-center justify-center text-3xl select-none">
+        <span id="remote_status" class="ml-2">Loading</span>
+        <span class="ml-2 font-bold">remote</span>
+    </div>
+</div>
+
+<script>
+    fetch('http://192.168.43.103:5000/api/run_remote', {
+        method: 'POST'
+    }).then(value => value.json()).then(value => {
+        if (value.status === "ok") {
+            document.getElementById("remote_status").innerHTML = "Running";
+        } else {
+            document.getElementById("remote_status").innerHTML = "Error";
+        }
+    });
+</script>

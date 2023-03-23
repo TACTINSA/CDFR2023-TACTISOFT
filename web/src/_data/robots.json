@@ -1,0 +1,12 @@
+[
+    {
+        "name": "Robot 1",
+        "camera": false,
+        "controller": true
+    },
+    {
+        "name": "Demo robot",
+        "camera": true,
+        "controller": true
+    }
+]

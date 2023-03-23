@@ -1,0 +1,42 @@
+---
+# @formatter:off
+layout: embedded_layout.njk
+title: "Strategies"
+# @formatter:on
+---
+<div id="strategies" class="flex flex-grow flex-wrap">
+
+</div>
+
+<script>
+    fetch('http://192.168.43.103:5000/api/strategies').then(value => value.json()).then(value => {
+        value.forEach(strategy => {
+            document.getElementById('strategies').innerHTML += `<div class="basis-1/2 bg-blue-500 flex items-center justify-center border-gray-100 border">
+                    <button onclick="run('${strategy}')" type="button" class="w-full h-full flex justify-center items-center focus:outline-none text-white bg-blue-700 hover:bg-blue-800 font-medium text-sm">
+                        <span class="ml-4 text-4xl">${strategy}</span>
+                    </button>
+                </div>`
+        });
+        if (value.length % 2 === 1) {
+            document.getElementById('strategies').innerHTML += `<div class="basis-1/2 bg-blue-700 flex items-center justify-center border-gray-100 border"></div>`;
+        }
+    });
+
+    function run(strategy) {
+        fetch('http://192.168.43.103:5000/api/run_strategy', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                strategy: strategy
+            })
+        }).then(value => value.json()).then(value => {
+            if (value.status === "ok") {
+                location.href = '/embedded/strategy_running/?strategy=' + strategy
+            } else {
+                location.href = '/embedded/home'
+            }
+        });
+    }
+</script>
