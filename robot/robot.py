@@ -1,7 +1,7 @@
 import logging
 
 from tactisoft.cli import NonBlockingCLI
-from tactisoft.line_following import init_pxiy, follow_line
+# from tactisoft.line_following import init_pxiy, follow_line
 from tactisoft.motors import Motors4
 from tactisoft.movements import MecanumMovement
 from tactisoft.sharedrobot import SharedRobot
@@ -37,6 +37,6 @@ class Robot(SharedRobot):
         cli.register_command("motor_raw", lambda *x: self.movement.send_command(motors.generate_command_with_validation(list(x))), "Send a raw command to the motor", "motor_raw <id> <command>")
         cli.register_command("follow_line", lambda x: self.follow_line(), "Follow the line", "follow_line")
 
-    def follow_line(self):
-        init_pxiy()
-        follow_line(self.movement, True)
+    # def follow_line(self):
+    #     init_pxiy()
+    #     follow_line(self.movement, True)

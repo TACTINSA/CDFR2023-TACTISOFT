@@ -3,14 +3,25 @@ import pathlib
 import subprocess
 import sys
 from typing import Optional
+import threading
 
-from flask import Flask, json, request
+from flask import Flask, json, request, send_from_directory
 from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
 
 process: Optional[subprocess.Popen] = None
+
+
+@app.route('/<path:filename>')
+def send_report(filename):
+    if '.' not in filename:
+        if not filename.endswith('/'):
+            filename += '/'
+        filename += 'index.html'
+    print("File :", filename)
+    return send_from_directory('web/public', filename)
 
 
 def run_main_program(args: list):
@@ -61,8 +72,13 @@ def kill():
     return json.dumps({"status": "ok"})
 
 
-if __name__ == '__main__':
+def run_web_server():
     app.run(host='0.0.0.0')
+
+
+if __name__ == '__main__':
+    threading.Thread(target=run_web_server).start()
+    os.system("DISPLAY=:0 /usr/bin/chromium-browser --kiosk http://127.0.0.1:5000/embedded/home")
 
     if process is not None:
         process.kill()
