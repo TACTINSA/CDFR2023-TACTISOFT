@@ -48,7 +48,6 @@ if __name__ == '__main__':
 
     sleep(1)  # Wait for the robot to be fully initialized before continuing
     robot.arduino.send("R2+set_ir_direction=none")
-    # robot.arduino.send("R2+INIT")
     logging.info("%s is initialized" % robot.name)
 
     if not args.no_startup:

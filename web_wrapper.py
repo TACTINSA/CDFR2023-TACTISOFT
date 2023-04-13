@@ -28,7 +28,7 @@ def run_main_program(args: list):
     global process
     if process is not None:
         kill_main_program()
-    process = subprocess.Popen([sys.executable, "main.py", "--no-startup", *args])
+    process = subprocess.Popen([sys.executable, "main.py", *args])
 
 
 def kill_main_program():

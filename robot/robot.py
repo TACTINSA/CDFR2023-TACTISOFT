@@ -4,6 +4,7 @@ from tactisoft.cli import NonBlockingCLI
 # from tactisoft.line_following import init_pxiy, follow_line
 from tactisoft.motors import Motors4
 from tactisoft.movements import MecanumMovement
+from tactisoft.servos import Servos
 from tactisoft.sharedrobot import SharedRobot
 from tactisoft.threadedserial import ThreadedSerial
 from tactisoft import motors
@@ -15,6 +16,7 @@ class Robot(SharedRobot):
         self.motors_serial = ThreadedSerial("/dev/motors", 38400, on_message=self.on_motor_message, raw=True, prefix="R2+")
         self.motors_ids = Motors4(front_right="e1", front_left="e2", back_right="e3", back_left="e4")
         self.movement = MecanumMovement(self.motors_serial, self.motors_ids, self.arduino)
+        self.servos = Servos(self.arduino)
 
     def on_arduino_message(self, message):
         if super().on_arduino_message(message):  # If handled by super don't handle the message
