@@ -63,7 +63,7 @@ class MecanumMovement:
         self.move_wheel(self.motor_ids.back_right, back_right * speed, True, distance)
         self.move_wheel(self.motor_ids.back_left, back_left * speed, False, distance)
 
-    async def async_move(self, duration: int, direction: Optional[float], speed: int, turn: float = 0):
+    async def async_move(self, duration: float, direction: Optional[float], speed: int, turn: float = 0, stop_ir_after: int = None):
         """Move the robot in the given direction (in radians) for the specified distance or indefinitely if none given and turn [-1; 1]"""
         assert speed > 0, "Speed must be positive"
 
@@ -72,13 +72,19 @@ class MecanumMovement:
 
         while time.time() - start_time < duration:
             if self.obstacle_is_detected_flag:
-                duration = duration - (time.time() - start_time)
-                self.stop()
-                while self.obstacle_is_detected_flag:
-                    self.obstacle_is_detected_flag = False
-                    await asyncio.sleep(1)
-                start_time = time.time()
-                self.move(direction=direction, speed=speed, turn=turn)
+                if stop_ir_after is not None and time.time() - start_time > stop_ir_after:
+                    continue
+                else:
+                    duration = duration - (time.time() - start_time)
+                    if stop_ir_after is not None:
+                        stop_ir_after = stop_ir_after - (time.time() - start_time)
+
+                    self.stop()
+                    while self.obstacle_is_detected_flag:
+                        self.obstacle_is_detected_flag = False
+                        await asyncio.sleep(1)
+                    start_time = time.time()
+                    self.move(direction=direction, speed=speed, turn=turn)
 
             await asyncio.sleep(0.1)
 
@@ -88,42 +94,42 @@ class MecanumMovement:
     def forward(self, speed: int, distance: int = None):
         self.move(direction=math.pi / 2, speed=speed, distance=distance)
 
-    async def async_forward(self, speed: int, duration: int):
+    async def async_forward(self, speed: int, duration: float, stop_ir_after: int = None):
         self.set_direction("forward")
-        await self.async_move(duration=duration, direction=math.pi / 2, speed=speed)
+        await self.async_move(duration=duration, direction=math.pi / 2, speed=speed, stop_ir_after=stop_ir_after)
 
     def backward(self, speed: int, distance: int = None):
         self.move(direction=3 * math.pi / 2, speed=speed, distance=distance)
 
-    async def async_backward(self, speed: int, duration: int):
+    async def async_backward(self, speed: int, duration: float, stop_ir_after: int = None):
         self.set_direction("backward")
-        await self.async_move(duration=duration, direction=3 * math.pi / 2, speed=speed)
+        await self.async_move(duration=duration, direction=3 * math.pi / 2, speed=speed, stop_ir_after=stop_ir_after)
 
     def right(self, speed: int, distance: int = None):
         self.move(direction=0, speed=speed, distance=distance)
 
-    async def async_right(self, speed: int, duration: int):
+    async def async_right(self, speed: int, duration: float, stop_ir_after: int = None):
         self.set_direction("right")
-        await self.async_move(duration=duration, direction=0, speed=speed)
+        await self.async_move(duration=duration, direction=0, speed=speed, stop_ir_after=stop_ir_after)
 
     def left(self, speed: int, distance: int = None):
         self.move(direction=math.pi, speed=speed, distance=distance)
 
-    async def async_left(self, speed: int, duration: int):
+    async def async_left(self, speed: int, duration: float, stop_ir_after: int = None):
         self.set_direction("left")
-        await self.async_move(duration=duration, direction=math.pi, speed=speed)
+        await self.async_move(duration=duration, direction=math.pi, speed=speed, stop_ir_after=stop_ir_after)
 
     def turn_right(self, speed: int, distance: int = None):
         self.move(direction=None, speed=speed, turn=1, distance=distance)
 
-    async def async_turn_right(self, speed: int, duration: int):
-        await self.async_move(duration=duration, direction=None, speed=speed, turn=1)
+    async def async_turn_right(self, speed: int, duration: float, stop_ir_after: int = None):
+        await self.async_move(duration=duration, direction=None, speed=speed, turn=1, stop_ir_after=stop_ir_after)
 
     def turn_left(self, speed: int, distance: int = None):
         self.move(direction=None, speed=speed, turn=-1, distance=distance)
 
-    async def async_turn_left(self, speed: int, duration: int):
-        await self.async_move(duration=duration, direction=None, speed=speed, turn=-1)
+    async def async_turn_left(self, speed: int, duration: float, stop_ir_after: int = None):
+        await self.async_move(duration=duration, direction=None, speed=speed, turn=-1, stop_ir_after=stop_ir_after)
 
     def stop(self):
         self.send_command(motors.stop(self.motor_ids.front_right))

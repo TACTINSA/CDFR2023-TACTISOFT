@@ -1,13 +1,21 @@
 #include <Arduino.h>
+#include <Adafruit_NeoPixel.h>
+
 #include <servos/Software_I2C_Adafruit_PWMServoDriver.h>
 #include "sharps/sharp.h"
 #include "servos/servo.h"
 
 
 #define COMMAND_PREFIX "R2+"
-#define DISTANCE_DETECTION 20
+#define DISTANCE_DETECTION 30
 
 #define PIN_TIRETTE 2
+#define PIN_LED 6
+
+#define NB_LEDS 20
+
+uint32_t red = Adafruit_NeoPixel::Color(255, 0, 0);
+Adafruit_NeoPixel pixels(NB_LEDS, PIN_LED, NEO_GRB);
 
 Sharp sharps[] = {
         Sharp(A0, DISTANCE_DETECTION),
@@ -22,8 +30,9 @@ Sharp sharps[] = {
 
 Software_I2C_Adafruit_PWMServoDriver pwm = Software_I2C_Adafruit_PWMServoDriver(12, 11);
 Servo servos[] = {
-        Servo(pwm, 0),
-        Servo(pwm, 1)
+        Servo(pwm, 0, 0, 270),
+        Servo(pwm, 1, 0, 270),
+        Servo(pwm, 2)
 };
 
 enum check_direction {
@@ -59,7 +68,17 @@ void setup() {
     pwm.setOscillatorFrequency(27000000);
     pwm.setPWMFreq(50);
 
+    pixels.begin();
+    pixels.setBrightness(255);
+
+    for (uint16_t i = 0; i < pixels.numPixels(); i++) {
+        pixels.setPixelColor(i, red);
+    }
+
+    pixels.show();
+
     delay(1000);
+
 }
 
 void match_loop() {
@@ -148,8 +167,6 @@ void process_match_commands() {
         } else if (command_name == "set_servo_angle") {
             long servo = command_args.substring(0, command_args.indexOf(',')).toInt();
             long angle = command_args.substring(command_args.indexOf(',') + 1).toInt();
-            Serial.println(servo);
-            Serial.println(angle);
             servos[servo].set_angle(angle);
         }
     }
