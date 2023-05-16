@@ -1,6 +1,6 @@
 import time
 
-from robot.robot import Robot
+from robot.robot_r2 import Robot
 from tactisoft import motors
 from tactisoft.motors import Direction
 

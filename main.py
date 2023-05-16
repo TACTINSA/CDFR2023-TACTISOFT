@@ -5,7 +5,7 @@ import asyncio
 import logging
 from time import sleep
 
-from robot.robot import Robot
+from robot.robot_r2 import Robot
 from tactisoft.cli import NonBlockingCLI
 import tactisoft.server as server
 

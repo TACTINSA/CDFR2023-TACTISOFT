@@ -12,7 +12,7 @@
 #define PIN_TIRETTE 2
 #define PIN_LED 6
 
-#define NB_LEDS 20
+#define NB_LEDS (9 * 4)
 
 uint32_t red = Adafruit_NeoPixel::Color(255, 0, 0);
 Adafruit_NeoPixel pixels(NB_LEDS, PIN_LED, NEO_GRB);
@@ -30,8 +30,8 @@ Sharp sharps[] = {
 
 Software_I2C_Adafruit_PWMServoDriver pwm = Software_I2C_Adafruit_PWMServoDriver(12, 11);
 Servo servos[] = {
-        Servo(pwm, 0, 0, 270),
-        Servo(pwm, 1, 0, 270),
+        Servo(pwm, 14, 0, 270),
+        Servo(pwm, 15, 0, 270),
         Servo(pwm, 2)
 };
 

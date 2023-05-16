@@ -9,7 +9,7 @@ from tactisoft.threadedserial import ThreadedSerial
 
 class Robot2(SharedRobot):
     def __init__(self):
-        super().__init__("Robot 2")
+        super().__init__("Robot Omni")
         self.motors_serial = ThreadedSerial("/dev/ttyUSB1", 38400, on_message=self.on_motor_message, raw=True,
                                             prefix="R2+")
         self.motors_ids = Motors3(mot1="e1", mot2="e2", mot3="e3")

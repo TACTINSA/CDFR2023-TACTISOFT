@@ -1,7 +1,7 @@
 import math
 import time
 
-from robot.robot import Robot
+from robot.robot_r2 import Robot
 
 
 # pince 1 : 10, 120

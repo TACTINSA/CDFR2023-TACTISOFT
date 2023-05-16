@@ -1,4 +1,4 @@
-from robot.robot import Robot
+from robot.robot_r2 import Robot
 
 
 async def run(robot: Robot):
