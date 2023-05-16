@@ -13,8 +13,8 @@ from tactisoft import motors
 
 class Robot(SharedRobot):
     def __init__(self):
-        super().__init__("Robot Mecanum")
-        self.motors_serial = ThreadedSerial("/dev/motors", 38400, on_message=self.on_motor_message, raw=True, prefix="R2+")
+        super().__init__("Robot Mecanum", "R2+")
+        self.motors_serial = ThreadedSerial("/dev/motors", 38400, on_message=self.on_motor_message, raw=True)
         self.motors_ids = Motors4(front_right="e1", front_left="e2", back_right="e3", back_left="e4")
         self.movement = MecanumMovement(self.motors_serial, self.motors_ids, self.arduino)
         self.servos = Servos(self.arduino)

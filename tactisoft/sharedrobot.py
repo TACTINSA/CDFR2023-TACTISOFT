@@ -8,9 +8,9 @@ from tactisoft.threadedserial import ThreadedSerial
 class SharedRobot:
     match_started = threading.Event()  # Event set when match
 
-    def __init__(self, name):
+    def __init__(self, name, prefix):
         self.name = name
-        self.arduino = ThreadedSerial("/dev/arduino", 9600, on_message=self.on_arduino_message, raw=False, prefix="R2+")
+        self.arduino = ThreadedSerial("/dev/arduino", 9600, on_message=self.on_arduino_message, raw=False, prefix=prefix)
 
     def on_arduino_message(self, message) -> bool:
         logging.debug("Arduino -> Robot: " + message)

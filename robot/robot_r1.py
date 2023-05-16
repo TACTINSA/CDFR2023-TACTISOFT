@@ -7,19 +7,20 @@ from tactisoft.sharedrobot import SharedRobot
 from tactisoft.threadedserial import ThreadedSerial
 
 
-class Robot2(SharedRobot):
+class Robot(SharedRobot):
     def __init__(self):
-        super().__init__("Robot Omni")
-        self.motors_serial = ThreadedSerial("/dev/ttyUSB1", 38400, on_message=self.on_motor_message, raw=True,
-                                            prefix="R2+")
+        super().__init__("Robot Omni", "R1+")
+        self.motors_serial = ThreadedSerial("/dev/motors", 38400, on_message=self.on_motor_message, raw=True)
         self.motors_ids = Motors3(mot1="e1", mot2="e2", mot3="e3")
         self.movement = OmniMovement(self.motors_serial, self.motors_ids)
+        self.team = "unknown"
 
     def on_arduino_message(self, message):
+        message: str = message
         if super().on_arduino_message(message):  # If handled by super don't handle the message
             return
-        elif message.startswith():
-            pass
+        elif message.startswith("team"):
+            self.team = message[5:]
 
     def on_motor_message(self, message):
         logging.debug("Motors -> Robot: " + " ".join(["{:02x}".format(x) for x in message]))
