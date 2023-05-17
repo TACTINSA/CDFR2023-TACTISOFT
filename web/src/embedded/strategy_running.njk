@@ -5,8 +5,11 @@ title: "Strategies"
 # @formatter:on
 ---
 <div id="strategies" class="flex flex-grow flex-wrap">
-    <div class="basis-full bg-blue-700 flex items-center justify-center text-3xl select-none">
+    <div class="basis-full bg-blue-700 flex items-center justify-center text-3xl select-none flex-col">
+        <span>
         Running strategy <span id="strategy" class="ml-2 font-bold"></span>
+        </span>
+        <h1 id="score" class="font-bold text-9xl"></h1>
     </div>
 </div>
 
@@ -14,4 +17,27 @@ title: "Strategies"
     const urlParams = new URLSearchParams(window.location.search);
     const strategy = urlParams.get('strategy')
     document.getElementById("strategy").innerText = strategy;
+
+    let update_score_loop_running = true;
+
+    function myLoop() {
+        setTimeout(function () {
+            fetch('http://192.168.43.103:5000/api/get_score').then(value => value.json()).then(value => {
+                if (value["status"] === "ok") {
+                    if (value["score"] !== null) {
+                        document.getElementById("score").innerText = "Score : " + value["score"];
+                        update_score_loop_running = false
+                    }
+                }
+            });
+            if (update_score_loop_running) {
+                myLoop();
+            }
+        }, 500)
+    }
+
+    document.addEventListener("DOMContentLoaded", (event) => {
+        myLoop();
+    });
+
 </script>

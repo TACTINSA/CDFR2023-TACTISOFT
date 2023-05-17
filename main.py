@@ -3,6 +3,7 @@
 import argparse
 import asyncio
 import logging
+import threading
 from time import sleep
 
 from robot.robot_r1 import Robot
@@ -14,6 +15,8 @@ should_stop = False
 cli = None
 robot = None
 
+loop = asyncio.new_event_loop()
+
 
 def set_stop(_should_stop):
     global should_stop
@@ -21,7 +24,17 @@ def set_stop(_should_stop):
 
 
 def launch_strategy(_strategy, _robot):
-    asyncio.run(getattr(__import__("strategies.%s" % _strategy, fromlist=["run"]), "run")(_robot))
+    loop.run_until_complete(getattr(__import__("strategies.%s" % _strategy, fromlist=["run"]), "run")(_robot))
+
+
+def stop_match():
+    for task in asyncio.all_tasks(loop):
+        task.cancel()
+    robot.arduino.send(robot.prefix + "set_led_color=red")
+    robot.movement.stop()
+
+    logging.info("Match finished (" + str(robot.score) + ")")
+    exit(1000 + robot.score)
 
 
 if __name__ == '__main__':
@@ -56,7 +69,12 @@ if __name__ == '__main__':
         robot.match_started.wait()
     else:
         robot.match_started.set()
-    # robot.follow_line()
+
+    logging.info("Match started")
+
+    match_end_timer = threading.Timer(95, stop_match)
+    match_end_timer.daemon = True
+    match_end_timer.start()
 
     if args.strategy:  # Run the strategy
         # launch the run(robot: Robot) function from the python file in strategies folder with args.strategy as name
@@ -75,3 +93,6 @@ if __name__ == '__main__':
 
         if args.server:  # Start the server
             server.run_forever(cli)
+
+    logging.info("Match finished (" + str(robot.score) + ")")
+    exit(1000 + robot.score)

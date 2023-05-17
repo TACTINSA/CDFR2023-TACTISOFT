@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import pathlib
 import subprocess
@@ -7,6 +8,8 @@ import threading
 
 from flask import Flask, json, request, send_from_directory
 from flask_cors import CORS
+
+DEFAULT_SCORE = 46  # TODO Default score in case of error
 
 app = Flask(__name__)
 CORS(app)
@@ -28,7 +31,7 @@ def run_main_program(args: list):
     global process
     if process is not None:
         kill_main_program()
-    process = subprocess.Popen([sys.executable, "main.py", *args])
+    process = subprocess.Popen([sys.executable, "main.py", "--log-level=debug", *args])
 
 
 def kill_main_program():
@@ -48,7 +51,7 @@ def run_main_program_with_remote():
 
 @app.route('/api/strategies', methods=['GET'])
 def get_companies():
-    return json.dumps([entry.name[:-3] for entry in os.scandir(pathlib.Path(__file__).parent / 'strategies') if not entry.is_dir()])
+    return json.dumps([entry.name[:-3] for entry in os.scandir(pathlib.Path(os.getcwd()) / 'strategies') if not entry.is_dir()])
 
 
 @app.route('/api/run_strategy', methods=['POST'])
@@ -70,6 +73,20 @@ def kill():
     print("kill")
     kill_main_program()
     return json.dumps({"status": "ok"})
+
+
+@app.route('/api/get_score', methods=['get'])
+def get_score():
+    if process is not None:
+        process.poll()
+
+    score = process.returncode if process else None
+    if score is not None:
+        score = score - 1000
+    if not 0 <= score <= 200:
+        score = DEFAULT_SCORE
+    print("get_score", score)
+    return json.dumps({"status": "ok", "score": score})
 
 
 def run_web_server():
