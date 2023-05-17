@@ -3,11 +3,15 @@
 import argparse
 import asyncio
 import logging
+import platform
 import threading
 from time import sleep
 
-from robot.robot_r1 import Robot
-# from robot.robot_r2 import Robot
+
+if platform.node() == "robot1":
+    from robot.robot_r1 import Robot
+elif platform.node() == "robot2":
+    from robot.robot_r2 import Robot
 from tactisoft.cli import NonBlockingCLI
 import tactisoft.server as server
 
