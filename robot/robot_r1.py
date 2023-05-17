@@ -1,4 +1,5 @@
 import logging
+import time
 
 from tactisoft.cli import NonBlockingCLI
 from tactisoft.motors import Motors3
@@ -25,6 +26,7 @@ class Robot(SharedRobot):
             # self.movement.obstacle_is_detected_flag = True
             while True:
                 self.movement.stop()
+                time.sleep(0.1)
 
     def on_motor_message(self, message):
         logging.debug("Motors -> Robot: " + " ".join(["{:02x}".format(x) for x in message]))

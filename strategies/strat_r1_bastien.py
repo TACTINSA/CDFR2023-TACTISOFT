@@ -14,20 +14,24 @@ def set_pince_commande(robot: Robot, pince: int, commande: str):
 
 
 async def strat_bleu(robot: Robot):
+
+    set_pince_commande(robot, 2, "OUVERTURE")
+    robot.movement.angle_0(100)
+    time.sleep(5)
+    set_pince_commande(robot, 2, "FERMETURE")
+    robot.movement.angle_180(100)
+    time.sleep(4)
+    robot.movement.stop()
     pass
 
 
 async def strat_vert(robot: Robot):
-    set_pince_commande(robot, 1, "OUVERTURE")
     set_pince_commande(robot, 2, "OUVERTURE")
-    set_pince_commande(robot, 3, "OUVERTURE")
-    time.sleep(1)
-    set_pince_commande(robot, 1, "FERMETURE")
-    set_pince_commande(robot, 2, "FERMETURE")
-    set_pince_commande(robot, 3, "STANDBY")
-    time.sleep(1)
-    robot.movement.forward(100)
+    robot.movement.angle_0(100)
     time.sleep(5)
+    set_pince_commande(robot, 2, "FERMETURE")
+    robot.movement.angle_180(100)
+    time.sleep(4)
     robot.movement.stop()
 
 
