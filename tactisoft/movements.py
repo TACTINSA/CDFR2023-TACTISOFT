@@ -147,9 +147,11 @@ class MecanumMovement:
 
 
 class OmniMovement:
-    def __init__(self, serial: ThreadedSerial, motor_ids: Motors3):
+    def __init__(self, serial: ThreadedSerial, motor_ids: Motors3, arduino: ThreadedSerial):
         self.motor_ids = motor_ids
         self.serial = serial
+        self.direction = "none"
+        self.arduino = arduino
 
     def send_command(self, command):
         self.serial.send(bytes.fromhex(command))
@@ -164,19 +166,43 @@ class OmniMovement:
         else:
             self.send_command(motors.stop(motor_id))
 
-    def forward(self, speed: int, duration: int = None):
-        self.move_wheel(self.motor_ids.mot1, speed, False, duration)
-        self.move_wheel(self.motor_ids.mot2, speed, True, duration)
-        self.move_wheel(self.motor_ids.mot3, speed, True, duration)
+    def angle_0(self, speed: int, duration: int = None): # direction mouton minecraft, IR_1 A8
+        self.set_direction("angle_0")
+        self.move_wheel(self.motor_ids.mot1, speed, direction = False)
+        self.move_wheel(self.motor_ids.mot2, speed, direction = True)
+        self.send_command(motors.stop(self.motor_ids.mot3))
 
-    def backward(self, speed: int, distance: int = None):
-        self.move(direction=3 * math.pi / 2, speed=speed, distance=distance)
+    def angle_60(self, speed: int, duration: int = None):  # direction bouton choix équipe, IR_2 A11
+        self.set_direction("angle_60")
+        self.send_command(motors.stop(self.motor_ids.mot1))
+        self.move_wheel(self.motor_ids.mot2, speed, direction=True)
+        self.move_wheel(self.motor_ids.mot3, speed, direction=False)
 
-    def right(self, speed: int, distance: int = None):
-        self.move(direction=0, speed=speed, distance=distance)
+    def angle_120(self, speed: int, duration: int = None):  # direction batterie logique, IR_5 A10
+        self.set_direction("angle_120")
+        self.move_wheel(self.motor_ids.mot1, speed, direction=True)
+        self.send_command(motors.stop(self.motor_ids.mot2))
+        self.move_wheel(self.motor_ids.mot3, speed, direction=False)
 
-    def left(self, speed: int, distance: int = None):
-        self.move(direction=math.pi, speed=speed, distance=distance)
+    def angle_180(self, speed: int, duration: int = None): # direction bouton arrêt d'urgence, IR_6 A13
+        self.set_direction("angle_180")
+        self.move_wheel(self.motor_ids.mot1, speed, direction = True)
+        self.move_wheel(self.motor_ids.mot2, speed, direction = False)
+        self.send_command(motors.stop(self.motor_ids.mot3))
+
+    def angle_240(self, speed: int, duration: int = None):  # direction batterie actionneurs, IR_3 A9
+        self.set_direction("angle_240")
+        self.send_command(motors.stop(self.motor_ids.mot1))
+        self.move_wheel(self.motor_ids.mot2, speed, direction=False)
+        self.move_wheel(self.motor_ids.mot3, speed, direction=True)
+
+    def angle_300(self, speed: int, duration: int = None):  # direction tirette, IR_4 A12
+        self.set_direction("angle_300")
+        self.move_wheel(self.motor_ids.mot1, speed, direction=False)
+        self.send_command(motors.stop(self.motor_ids.mot2))
+        self.move_wheel(self.motor_ids.mot3, speed, direction=True)
+
+
 
     def turn_right(self, speed: int, distance: int = None):
         self.move(direction=None, speed=speed, turn=1, distance=distance)
@@ -188,3 +214,7 @@ class OmniMovement:
         self.send_command(motors.stop(self.motor_ids.mot1))
         self.send_command(motors.stop(self.motor_ids.mot2))
         self.send_command(motors.stop(self.motor_ids.mot3))
+
+    def set_direction(self, direction: str):
+        self.arduino.send("R1+set_ir_direction=%s" % direction)
+        self.direction = direction
