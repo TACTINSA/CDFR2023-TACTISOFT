@@ -22,7 +22,7 @@ title: "Strategies"
 
     function myLoop() {
         setTimeout(function () {
-            fetch('http://192.168.43.103:5000/api/get_score').then(value => value.json()).then(value => {
+            fetch('http://localhost:5000/api/get_score').then(value => value.json()).then(value => {
                 if (value["status"] === "ok") {
                     if (value["score"] !== null) {
                         document.getElementById("score").innerText = "Score : " + value["score"];

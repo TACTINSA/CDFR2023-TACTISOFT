@@ -12,7 +12,7 @@ title: "Accès à distance"
 </div>
 
 <script>
-    fetch('http://192.168.43.103:5000/api/run_remote', {
+    fetch('http://localhost:5000/api/run_remote', {
         method: 'POST'
     }).then(value => value.json()).then(value => {
         if (value.status === "ok") {

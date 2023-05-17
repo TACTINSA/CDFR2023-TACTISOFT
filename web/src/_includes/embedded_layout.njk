@@ -24,7 +24,7 @@
 </div>
 <script>
     function kill() {
-        fetch('http://192.168.43.103:5000/api/kill', {
+        fetch('http://localhost:5000/api/kill', {
             method: 'POST'
         }).then(value => value.json()).then(value => {
             if (value.status === "ok") {
