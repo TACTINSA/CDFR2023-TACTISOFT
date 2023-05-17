@@ -256,6 +256,14 @@ void process_match_commands() {
             } else {
                 Serial.println("none");
             }
+        } else if (command_name == "set_led_color") {
+            if (command_args == "vert") {
+                couleur_LEDS(equipe_verte);
+            } else if (command_args == "bleu") {
+                couleur_LEDS(equipe_bleue);
+            } else if (command_args == "none") {
+                couleur_LEDS(pas_dequipe);
+            }
         }
     }
 }

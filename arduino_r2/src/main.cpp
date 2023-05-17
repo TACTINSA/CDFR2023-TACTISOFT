@@ -5,7 +5,6 @@
 #include "sharps/sharp.h"
 #include "servos/servo.h"
 
-
 #define COMMAND_PREFIX "R2+"
 #define DISTANCE_DETECTION 30
 
@@ -15,6 +14,9 @@
 #define NB_LEDS (9 * 4)
 
 uint32_t red = Adafruit_NeoPixel::Color(255, 0, 0);
+uint32_t purple = Adafruit_NeoPixel::Color(165, 50, 150);
+uint32_t blue = Adafruit_NeoPixel::Color(0, 92, 230);
+uint32_t green = Adafruit_NeoPixel::Color(165, 50, 150);
 Adafruit_NeoPixel pixels(NB_LEDS, PIN_LED, NEO_GRB);
 
 Sharp sharps[] = {
@@ -59,6 +61,8 @@ void process_match_commands();
 
 void process_ir_event();
 
+void set_led_colors(uint32_t color);
+
 void setup() {
     Serial.begin(9600);  // démarre le port série
 
@@ -71,14 +75,17 @@ void setup() {
     pixels.begin();
     pixels.setBrightness(255);
 
+    set_led_colors(purple);
+
+    delay(1000);
+}
+
+void set_led_colors(uint32_t color) {
     for (uint16_t i = 0; i < pixels.numPixels(); i++) {
-        pixels.setPixelColor(i, red);
+        pixels.setPixelColor(i, color);
     }
 
     pixels.show();
-
-    delay(1000);
-
 }
 
 void match_loop() {
@@ -168,6 +175,16 @@ void process_match_commands() {
             long servo = command_args.substring(0, command_args.indexOf(',')).toInt();
             long angle = command_args.substring(command_args.indexOf(',') + 1).toInt();
             servos[servo].set_angle(angle);
+        } else if (command_name == "set_led_color") {
+            if (command_args == "green") {
+                set_led_colors(green);
+            } else if (command_args == "blue") {
+                set_led_colors(blue);
+            } else if (command_args == "red") {
+                set_led_colors(red);
+            } else if (command_args == "purple") {
+                set_led_colors(purple);
+            }
         }
     }
 }
