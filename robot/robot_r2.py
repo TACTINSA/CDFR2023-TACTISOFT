@@ -4,7 +4,7 @@ import time
 from tactisoft.cli import NonBlockingCLI
 # from tactisoft.line_following import init_pxiy, follow_line
 from tactisoft.motors import Motors4
-from tactisoft.movements import MecanumMovement, MecanumMovementEncoder
+from tactisoft.movements import MecanumMovement
 from tactisoft.servos import Servos
 from tactisoft.sharedrobot import SharedRobot
 from tactisoft.threadedserial import ThreadedSerial

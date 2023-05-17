@@ -12,7 +12,7 @@ class Robot(SharedRobot):
         super().__init__("Robot Omni", "R1+")
         self.motors_serial = ThreadedSerial("/dev/motors", 38400, on_message=self.on_motor_message, raw=True)
         self.motors_ids = Motors3(mot1="e1", mot2="e2", mot3="e3")
-        self.movement = OmniMovement(self.motors_serial, self.motors_ids)
+        self.movement = OmniMovement(self.motors_serial, self.motors_ids, self.arduino)
         self.team = "unknown"
 
     def on_arduino_message(self, message):
@@ -21,6 +21,10 @@ class Robot(SharedRobot):
             return
         elif message.startswith("team"):
             self.team = message[5:]
+        elif message.startswith("obstacle+%s" % self.movement.direction):
+            # self.movement.obstacle_is_detected_flag = True
+            while True:
+                self.movement.stop()
 
     def on_motor_message(self, message):
         logging.debug("Motors -> Robot: " + " ".join(["{:02x}".format(x) for x in message]))

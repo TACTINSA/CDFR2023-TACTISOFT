@@ -49,11 +49,11 @@ Adafruit_NeoPixel led = Adafruit_NeoPixel(NUMPIXELS, PIN_LEDS, NEO_GRB + NEO_KHZ
 // Sharps
 Sharp sharps[] = {
         Sharp(A8, DISTANCE_DETECTION),
-        Sharp(A9, DISTANCE_DETECTION),
-        Sharp(A10, DISTANCE_DETECTION),
         Sharp(A11, DISTANCE_DETECTION),
-        Sharp(A12, DISTANCE_DETECTION),
+        Sharp(A10, DISTANCE_DETECTION),
         Sharp(A13, DISTANCE_DETECTION),
+        Sharp(A9, DISTANCE_DETECTION),
+        Sharp(A12, DISTANCE_DETECTION),
 };
 
 
@@ -84,12 +84,20 @@ Adafruit_TCS34725softi2c tcs3 = Adafruit_TCS34725softi2c(TCS34725_INTEGRATIONTIM
 
 
 enum check_direction {
-    FORWARD,
-    BACKWARD,
-    LEFT,
-    RIGHT,
+    ANGLE_0,
+    ANGLE_60,
+    ANGLE_120,
+    ANGLE_180,
+    ANGLE_240,
+    ANGLE_300,
     NONE
 } check_direction = NONE;
+
+enum team {
+    VERT,
+    BLEU,
+    NO_TEAM
+} team = NO_TEAM;
 
 int counter_ir = 0;
 
@@ -154,34 +162,46 @@ void match_loop() {
 }
 
 void process_ir_event() {
-    /*TODO switch (check_direction) {
-        case FORWARD:
-            if (sharps[0].isBellow() || sharps[7].isBellow()) {
+    switch (check_direction) {
+        case ANGLE_0:
+            if (sharps[0].isBellow()) {
                 Serial.print(COMMAND_PREFIX);
-                Serial.println("obstacle+forward");
+                Serial.println("obstacle+angle_0");
             }
             break;
-        case LEFT:
-            if (sharps[1].isBellow() || sharps[2].isBellow()) {
+        case ANGLE_60:
+            if (sharps[1].isBellow()) {
                 Serial.print(COMMAND_PREFIX);
-                Serial.println("obstacle+left");
+                Serial.println("obstacle+angle_60");
             }
             break;
-        case BACKWARD:
-            if (sharps[3].isBellow() || sharps[4].isBellow()) {
+        case ANGLE_120:
+            if (sharps[2].isBellow()) {
                 Serial.print(COMMAND_PREFIX);
-                Serial.println("obstacle+backward");
+                Serial.println("obstacle+angle_120");
             }
             break;
-        case RIGHT:
-            if (sharps[5].isBellow() || sharps[6].isBellow()) {
+        case ANGLE_180:
+            if (sharps[3].isBellow()) {
                 Serial.print(COMMAND_PREFIX);
-                Serial.println("obstacle+right");
+                Serial.println("obstacle+angle_180");
+            }
+            break;
+        case ANGLE_240:
+            if (sharps[4].isBellow()) {
+                Serial.print(COMMAND_PREFIX);
+                Serial.println("obstacle+angle_240");
+            }
+            break;
+        case ANGLE_300:
+            if (sharps[5].isBellow()) {
+                Serial.print(COMMAND_PREFIX);
+                Serial.println("obstacle+angle_300");
             }
             break;
         case NONE:
             break;
-    }*/
+    }
 }
 
 void process_match_commands() {
@@ -206,29 +226,33 @@ void process_match_commands() {
 
         if (command_name == "ping") {
             Serial.println("R1+pong");
-        } /*else if (command_name == "set_ir_direction") {
-            if (command_args == "forward") {
-                check_direction = FORWARD;
-            } else if (command_args == "backward") {
-                check_direction = BACKWARD;
-            } else if (command_args == "left") {
-                check_direction = LEFT;
-            } else if (command_args == "right") {
-                check_direction = RIGHT;
+        } else if (command_name == "set_ir_direction") {
+            if (command_args == "angle_0") {
+                check_direction = ANGLE_0;
+            } else if (command_args == "angle_60") {
+                check_direction = ANGLE_60;
+            } else if (command_args == "angle_120") {
+                check_direction = ANGLE_120;
+            } else if (command_args == "angle_180") {
+                check_direction = ANGLE_180;
+            } else if (command_args == "angle_240") {
+                check_direction = ANGLE_240;
+            } else if (command_args == "angle_300") {
+                check_direction = ANGLE_300;
             } else if (command_args == "none") {
                 check_direction = NONE;
             }
-        } */else if (command_name == "set_pince_commande") {
+        } else if (command_name == "set_pince_commande") {
             byte pince = command_args.substring(0, command_args.indexOf(',')).toInt();
             int commande = (int) command_args.substring(command_args.indexOf(',') + 1).toInt();
             pince_management(pince, commande);
         } else if (command_name == "get_team") {
             Serial.print(COMMAND_PREFIX);
             Serial.print("team=");
-            if (digitalRead(BTN_BLEUE) == LOW) {
-                Serial.println("blue");
-            } else if (digitalRead(BTN_VERT) == LOW) {
-                Serial.println("green");
+            if (team == VERT) {
+                Serial.println("vert");
+            } else if (team == BLEU) {
+                Serial.println("bleu");
             } else {
                 Serial.println("none");
             }
@@ -245,6 +269,17 @@ void loop() {
                 Serial.println("START");
                 step = MATCH;
             }
+            if (digitalRead(BTN_BLEUE) == LOW) {
+                team = BLEU;
+                couleur_LEDS(equipe_bleue);
+            } else if (digitalRead(BTN_VERT) == LOW) {
+                team = VERT;
+                couleur_LEDS(equipe_verte);
+            } else {
+                team = NO_TEAM;
+                couleur_LEDS(pas_dequipe);
+            }
+            break;
         case MATCH:
             match_loop();
             break;
