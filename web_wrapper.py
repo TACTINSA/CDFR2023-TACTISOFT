@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
+import inspect
 import os
-import pathlib
 import subprocess
 import sys
-from typing import Optional
 import threading
+from typing import Optional
 
 from flask import Flask, json, request, send_from_directory
 from flask_cors import CORS
 
-DEFAULT_SCORE = 46  # TODO Default score in case of error
+DEFAULT_SCORE = 41  # TODO Default score in case of error
 
 app = Flask(__name__)
 CORS(app)
@@ -31,7 +31,10 @@ def run_main_program(args: list):
     global process
     if process is not None:
         kill_main_program()
-    process = subprocess.Popen([sys.executable, "main.py", "--log-level=debug", *args])
+
+    filename = inspect.getframeinfo(inspect.currentframe()).filename
+    path = os.path.dirname(os.path.abspath(filename))
+    process = subprocess.Popen([sys.executable, path + "/main.py", "--log-level=debug", *args])
 
 
 def kill_main_program():
@@ -50,8 +53,10 @@ def run_main_program_with_remote():
 
 
 @app.route('/api/strategies', methods=['GET'])
-def get_companies():
-    return json.dumps([entry.name[:-3] for entry in os.scandir(pathlib.Path(os.getcwd()) / 'strategies') if not entry.is_dir()])
+def get_strategies():
+    filename = inspect.getframeinfo(inspect.currentframe()).filename
+    path = os.path.dirname(os.path.abspath(filename))
+    return json.dumps([entry.name[:-3] for entry in os.scandir(path + '/strategies') if not entry.is_dir()])
 
 
 @app.route('/api/run_strategy', methods=['POST'])
@@ -83,7 +88,8 @@ def get_score():
     score = process.returncode if process else None
     if score is not None:
         score = score - 1000
-    if not 0 <= score <= 200:
+    if score is not None and not (0 <= score <= 200):
+        print("ABC", score)
         score = DEFAULT_SCORE
     print("get_score", score)
     return json.dumps({"status": "ok", "score": score})

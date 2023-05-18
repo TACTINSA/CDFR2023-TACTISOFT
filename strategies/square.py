@@ -8,5 +8,4 @@ from robot.robot_r2 import Robot
 # pont levis : 70, 25
 
 async def run(robot: Robot):
-    await robot.movement.async_forward(speed=100, duration=5)
-    robot.score = 11
+    robot.arduino.send("R2+set_led_color=blue")
