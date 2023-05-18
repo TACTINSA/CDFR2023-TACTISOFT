@@ -7,6 +7,7 @@ import platform
 import threading
 from time import sleep
 
+from strategies.strat_r1_bastien import set_pince_commande
 
 if platform.node() == "robot1":
     from robot.robot_r1 import Robot

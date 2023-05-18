@@ -202,6 +202,20 @@ class OmniMovement:
         self.send_command(motors.stop(self.motor_ids.mot2))
         self.move_wheel(self.motor_ids.mot3, speed, direction=True)
 
+    def rotation_gauche(self, speed: int, duration: int = None):
+        self.set_direction("rotation_gauche")
+        self.move_wheel(self.motor_ids.mot1, speed, direction=False)
+        self.move_wheel(self.motor_ids.mot2, speed, direction=False)
+        self.move_wheel(self.motor_ids.mot3, speed, direction=False)
+
+    def rotation_droite(self, speed: int, duration: int = None):
+        self.set_direction("rotation_gauche")
+        self.move_wheel(self.motor_ids.mot1, speed, direction=True)
+        self.move_wheel(self.motor_ids.mot2, speed, direction=True)
+        self.move_wheel(self.motor_ids.mot3, speed, direction=True)
+
+
+
 
 
     def turn_right(self, speed: int, distance: int = None):
