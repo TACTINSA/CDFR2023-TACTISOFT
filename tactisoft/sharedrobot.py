@@ -12,7 +12,7 @@ class SharedRobot:
         self.name = name
         self.prefix = prefix
         self.arduino = ThreadedSerial("/dev/arduino", 9600, on_message=self.on_arduino_message, raw=False, prefix=self.prefix)
-        self.score = 41  # TODO Default score in case of error
+        self.score = 49 # TODO estimation
 
     def on_arduino_message(self, message) -> bool:
         logging.debug("Arduino -> Robot: " + message)

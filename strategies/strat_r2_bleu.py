@@ -46,10 +46,10 @@ async def run(robot: Robot):
     time.sleep(0.5)
 
     await robot.movement.async_backward(speed=100, duration=dist_to_time(350))  # Etape 14
-    await robot.movement.async_left(speed=100, duration=dist_to_time(1650+200))  # Etape 15#156cm de déplacement
+    await robot.movement.async_left(speed=100, duration=dist_to_time(1650 + 200))  # Etape 15#156cm de déplacement
     await robot.movement.async_forward(speed=100, duration=dist_to_time(450))  # Etape 16
 
-    robot.score = 41
+    robot.score = 49  # TODO estimation
 
     robot.servos.set_servo_angle(0, 10)
     robot.servos.set_servo_angle(1, 175)

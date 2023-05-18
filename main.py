@@ -33,7 +33,7 @@ def launch_strategy(_strategy, _robot):
 def stop_match():
     for task in asyncio.all_tasks(loop):
         task.cancel()
-    robot.arduino.send(robot.prefix + "set_led_color=red")
+    robot.arduino.send(robot.prefix + "finish_match")
     robot.movement.stop()
 
     logging.info("Match finished (" + str(robot.score) + ")")
@@ -97,6 +97,9 @@ if __name__ == '__main__':
 
         if args.server:  # Start the server
             server.run_forever(cli)
+
+    robot.arduino.send(robot.prefix + "finish_match")
+    robot.movement.stop()
 
     logging.info("Match finished (" + str(robot.score) + ")")
     exit(1000 + robot.score)
