@@ -6,7 +6,7 @@
 
 
 #define COMMAND_PREFIX "R1+"
-#define DISTANCE_DETECTION 30
+#define DISTANCE_DETECTION 20
 
 #define PIN_TIRETTE 53
 #define PIN_LED 6
@@ -43,6 +43,7 @@ Adafruit_PWMServoDriver servo = Adafruit_PWMServoDriver();
 uint32_t equipe_verte = Adafruit_NeoPixel::Color(0, 170, 18);
 uint32_t equipe_bleue = Adafruit_NeoPixel::Color(0, 92, 230);
 uint32_t pas_dequipe = Adafruit_NeoPixel::Color(165, 50, 150);
+uint32_t rouge = Adafruit_NeoPixel::Color(255, 0, 0);
 Adafruit_NeoPixel led = Adafruit_NeoPixel(NUMPIXELS, PIN_LEDS, NEO_GRB + NEO_KHZ800);
 
 
@@ -263,6 +264,8 @@ void process_match_commands() {
                 couleur_LEDS(equipe_bleue);
             } else if (command_args == "none") {
                 couleur_LEDS(pas_dequipe);
+            } else if (command_args == "red") {
+                couleur_LEDS(rouge);
             }
         }
     }

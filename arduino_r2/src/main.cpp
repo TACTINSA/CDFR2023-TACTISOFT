@@ -6,7 +6,7 @@
 #include "servos/servo.h"
 
 #define COMMAND_PREFIX "R2+"
-#define DISTANCE_DETECTION 30
+#define DISTANCE_DETECTION 20
 
 #define PIN_TIRETTE 2
 #define PIN_LED 6
@@ -111,25 +111,37 @@ void process_ir_event() {
         case FORWARD:
             if (sharps[0].isBellow() || sharps[7].isBellow()) {
                 Serial.print(COMMAND_PREFIX);
-                Serial.println("obstacle+forward");
+                Serial.print("obstacle+forward+");
+                Serial.print(sharps[0].getDistance());
+                Serial.print(",");
+                Serial.println(sharps[7].getDistance());
             }
             break;
         case LEFT:
             if (sharps[1].isBellow() || sharps[2].isBellow()) {
                 Serial.print(COMMAND_PREFIX);
-                Serial.println("obstacle+left");
+                Serial.print("obstacle+left+");
+                Serial.print(sharps[1].getDistance());
+                Serial.print(",");
+                Serial.println(sharps[2].getDistance());
             }
             break;
         case BACKWARD:
             if (sharps[3].isBellow() || sharps[4].isBellow()) {
                 Serial.print(COMMAND_PREFIX);
-                Serial.println("obstacle+backward");
+                Serial.print("obstacle+backward+");
+                Serial.print(sharps[3].getDistance());
+                Serial.print(",");
+                Serial.println(sharps[4].getDistance());
             }
             break;
         case RIGHT:
             if (sharps[5].isBellow() || sharps[6].isBellow()) {
                 Serial.print(COMMAND_PREFIX);
-                Serial.println("obstacle+right");
+                Serial.print("obstacle+right+");
+                Serial.print(sharps[5].getDistance());
+                Serial.print(",");
+                Serial.println(sharps[6].getDistance());
             }
             break;
         case NONE:
