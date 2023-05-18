@@ -12,27 +12,36 @@ def set_pince_commande(robot: Robot, pince: int, commande: str):
     elif commande == "FERMETURE":
         robot.arduino.send("R1+set_pince_commande=%s,%s" % (pince, 150))
 
-
 async def strat_bleu(robot: Robot):
 
-    set_pince_commande(robot, 2, "OUVERTURE")
-    robot.movement.angle_0(100)
-    time.sleep(5)
-    set_pince_commande(robot, 2, "FERMETURE")
-    robot.movement.angle_180(100)
-    time.sleep(4)
-    robot.movement.stop()
+    for x in range(0, 50) :
+        set_pince_commande(robot, 1, "OUVERTURE")
+        #set_pince_commande(robot, 2, "OUVERTURE")
+        #set_pince_commande(robot, 3, "OUVERTURE")
+        #set_pince_commande(robot, 4, "OUVERTURE")
+        #set_pince_commande(robot, 5, "OUVERTURE")
+        #set_pince_commande(robot, 6, "OUVERTURE")
+        time.sleep(3)
+        set_pince_commande(robot, 1, "FERMETURE")
+        #set_pince_commande(robot, 2, "FERMETURE")
+        #set_pince_commande(robot, 3, "FERMETURE")
+        #set_pince_commande(robot, 4, "FERMETURE")
+        #set_pince_commande(robot, 5, "FERMETURE")
+        #set_pince_commande(robot, 6, "FERMETURE")
+        time.sleep(3)
+        print(x)
     pass
 
 
 async def strat_vert(robot: Robot):
-    set_pince_commande(robot, 2, "OUVERTURE")
-    robot.movement.angle_0(100)
-    time.sleep(5)
-    set_pince_commande(robot, 2, "FERMETURE")
-    robot.movement.angle_180(100)
-    time.sleep(4)
-    robot.movement.stop()
+    pass
+    #set_pince_commande(robot, 2, "OUVERTURE")
+    #robot.movement.angle_0(100)
+    #time.sleep(5)
+    #set_pince_commande(robot, 2, "FERMETURE")
+    #robot.movement.angle_180(100)
+    #time.sleep(4)
+    #robot.movement.stop()
 
 
 async def run(robot: Robot):
