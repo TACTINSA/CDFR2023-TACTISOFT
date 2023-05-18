@@ -41,7 +41,7 @@ async def run(robot: Robot):
     robot.servos.set_servo_angle(2, 70)
     time.sleep(0.5)
     robot.servos.set_servo_angle(2, 25)
-    time.sleep(2)
+    time.sleep(5)
     robot.servos.set_servo_angle(2, 70)
     time.sleep(0.5)
 
