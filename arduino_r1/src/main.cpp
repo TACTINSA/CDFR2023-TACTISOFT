@@ -32,8 +32,6 @@
 #define OUVERTURE 250
 #define STANDBY 0
 
-#define GARDE_CERISE 0 // servos cerises : 6 7 8
-#define DEPOSE_CERISE 0
 
 Adafruit_PWMServoDriver servo = Adafruit_PWMServoDriver();
 
@@ -122,6 +120,7 @@ void couleur_LEDS(uint32_t couleur);
 
 
 void setup() {
+
     led.begin();
     led.setBrightness(255);
     led.show(); // Initialize all pixels to 'off'
@@ -141,9 +140,12 @@ void setup() {
 
     couleur_LEDS(pas_dequipe);
 
+    pince_management(0, STANDBY);
     pince_management(1, STANDBY);
     pince_management(2, STANDBY);
-    pince_management(3, STANDBY);
+    pince_management(4, 0);
+    pince_management(5, 0);
+    pince_management(6, 0);
 
     delay(1000);
 }
@@ -307,19 +309,34 @@ void couleur_LEDS(uint32_t couleur) {
 
 void pince_management(byte num_pince, int commande) {
     switch (num_pince) {
-        case 1:
+        case 2: // pince 120 degres
             servo.setPWM(0, 0, STANDBY_0 + commande);
             servo.setPWM(1, 0, STANDBY_1 - commande);
             break;
 
-        case 2:
+        case 1: // pince 0 degres
             servo.setPWM(2, 0, STANDBY_2 + commande);
             servo.setPWM(3, 0, STANDBY_3 - commande);
             break;
 
-        case 3:
+        case 3: // pince 240 degres
             servo.setPWM(4, 0, STANDBY_4 + commande);
             servo.setPWM(5, 0, STANDBY_5 - commande);
             break;
+
+        case 4:
+            servo.setPWM(13, 0, 200 + commande);
+            break;
+
+        case 5:
+            servo.setPWM(15, 0, 200 + commande);
+            break;
+
+        case 6:
+            servo.setPWM(14, 0, 200 + commande);
+            break;
+
     }
+    
 }
+
