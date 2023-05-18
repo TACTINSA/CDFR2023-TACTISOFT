@@ -13,6 +13,7 @@ def dist_to_time(distance: float):  # la distance est exprimé en mm et le temps
 
 
 async def run(robot: Robot):
+    robot.arduino.send("R2+set_led_color=green")
     await robot.movement.async_forward(speed=100, duration=dist_to_time(570))  # étape 1
     await robot.movement.async_turn_right(speed=100, duration=1.45)  # étape 2
     # ouverture pince
@@ -23,9 +24,9 @@ async def run(robot: Robot):
     # robot.servos.set_servo_angle(1, 60)
     await robot.movement.async_move(direction=math.pi / 2, turn=1, speed=100, duration=2.3)  # Etape4
     # await robot.movement.async_turn_right(speed=100, duration=1.40)
-    await robot.movement.async_forward(speed=100, duration=dist_to_time(350))  # Etape 5
-    await robot.movement.async_turn_left(speed=100, duration=1.4)  # Etape 6
-    await robot.movement.async_forward(speed=100, duration=dist_to_time(170))  # Etape 7
+    await robot.movement.async_forward(speed=100, duration=dist_to_time(380))  # Etape 5
+    await robot.movement.async_turn_left(speed=100, duration=1.2)  # Etape 6
+    await robot.movement.async_forward(speed=100, duration=dist_to_time(130))  # Etape 7
     await robot.movement.async_backward(speed=100, duration=dist_to_time(150))  # Etape 8
     # fermeture pince
     robot.servos.set_servo_angle(0, 10)
@@ -33,7 +34,7 @@ async def run(robot: Robot):
     await robot.movement.async_turn_left(speed=100, duration=1.4)  # Etape 9
     await robot.movement.async_forward(speed=100, duration=dist_to_time(270))  # Etape 10
     await robot.movement.async_right(speed=100, duration=dist_to_time(670), stop_ir_after=0)  # Etape 11
-    await robot.movement.async_backward(speed=100, duration=dist_to_time(300))  # Etape 12
+    await robot.movement.async_backward(speed=100, duration=dist_to_time(350), stop_ir_after=0)  # Etape 12
     await robot.movement.async_right(speed=100, duration=dist_to_time(50), stop_ir_after=0)  # tape contre la paroie #Etape 13
     # Cerise
     robot.servos.set_servo_angle(2, 70)
@@ -43,9 +44,9 @@ async def run(robot: Robot):
     robot.servos.set_servo_angle(2, 70)
     time.sleep(0.5)
 
-    await robot.movement.async_forward(speed=100, duration=dist_to_time(300))  # Etape 14
+    await robot.movement.async_forward(speed=100, duration=dist_to_time(380))  # Etape 14
     await robot.movement.async_left(speed=100, duration=dist_to_time(1650))  # Etape 15#156cm de déplacement
-    await robot.movement.async_backward(speed=100, duration=dist_to_time(350))  # Etape 16
+    await robot.movement.async_backward(speed=100, duration=dist_to_time(450))  # Etape 16
     robot.score = 50
 
     robot.servos.set_servo_angle(0, 10)

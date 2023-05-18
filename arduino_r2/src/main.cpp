@@ -16,7 +16,7 @@
 uint32_t red = Adafruit_NeoPixel::Color(255, 0, 0);
 uint32_t purple = Adafruit_NeoPixel::Color(165, 50, 150);
 uint32_t blue = Adafruit_NeoPixel::Color(0, 92, 230);
-uint32_t green = Adafruit_NeoPixel::Color(165, 50, 150);
+uint32_t green = Adafruit_NeoPixel::Color(0, 170, 18);
 Adafruit_NeoPixel pixels(NB_LEDS, PIN_LED, NEO_GRB);
 
 Sharp sharps[] = {

@@ -13,6 +13,7 @@ def dist_to_time(distance: float):  # la distance est exprimé en mm et le temps
 
 
 async def run(robot: Robot):
+    robot.arduino.send("R2+set_led_color=blue")
     # # Mouvement match 1
     await robot.movement.async_forward(speed=100, duration=dist_to_time(570))  # étape 1
     await robot.movement.async_turn_left(speed=100, duration=1.45)  # étape 2
@@ -45,7 +46,7 @@ async def run(robot: Robot):
     time.sleep(0.5)
 
     await robot.movement.async_backward(speed=100, duration=dist_to_time(350))  # Etape 14
-    await robot.movement.async_left(speed=100, duration=dist_to_time(1650))  # Etape 15#156cm de déplacement
+    await robot.movement.async_left(speed=100, duration=dist_to_time(1650+200))  # Etape 15#156cm de déplacement
     await robot.movement.async_forward(speed=100, duration=dist_to_time(450))  # Etape 16
 
     robot.score = 41
