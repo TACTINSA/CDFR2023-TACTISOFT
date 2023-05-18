@@ -16,6 +16,7 @@ class Robot(SharedRobot):
         self.movement = OmniMovement(self.motors_serial, self.motors_ids, self.arduino)
         self.team = "unknown"
 
+
     def on_arduino_message(self, message):
         message: str = message
         if super().on_arduino_message(message):  # If handled by super don't handle the message

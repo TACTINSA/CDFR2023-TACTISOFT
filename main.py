@@ -96,6 +96,7 @@ if __name__ == '__main__':
                 sleep(0.1)
             cli.stop()
 
+
         if args.server:  # Start the server
             server.run_forever(cli)
 

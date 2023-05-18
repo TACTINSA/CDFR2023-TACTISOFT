@@ -21,6 +21,7 @@ async def strat_bleu(robot: Robot):
     set_pince_commande(robot, 5, "STANDBY")
     set_pince_commande(robot, 6, "STANDBY")
 
+
 # avance jusqu'à la pile maron avec la pince ouverte ( notre second robot doit être en pause )
 # marque un arrêt et ferme la pince, attends une demi seconde avant de reprendre le chemin
 

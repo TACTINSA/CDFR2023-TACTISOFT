@@ -334,5 +334,6 @@ void pince_management(byte num_pince, int commande) {
             break;
 
     }
+    
 }
 

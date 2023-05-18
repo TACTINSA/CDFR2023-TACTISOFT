@@ -232,3 +232,4 @@ class OmniMovement:
     def set_direction(self, direction: str):
         self.arduino.send("R1+set_ir_direction=%s" % direction)
         self.direction = direction
+
