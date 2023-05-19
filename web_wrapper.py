@@ -9,7 +9,7 @@ from typing import Optional
 from flask import Flask, json, request, send_from_directory
 from flask_cors import CORS
 
-DEFAULT_SCORE = 41  # TODO Default score in case of error
+DEFAULT_SCORE = 49  # TODO estimation
 
 app = Flask(__name__)
 CORS(app)
@@ -88,8 +88,7 @@ def get_score():
     score = process.returncode if process else None
     if score is not None:
         score = score - 1000
-    if score is not None and not (0 <= score <= 200):
-        print("ABC", score)
+    if score is not None:  # and not (0 <= score <= 200):
         score = DEFAULT_SCORE
     print("get_score", score)
     return json.dumps({"status": "ok", "score": score})

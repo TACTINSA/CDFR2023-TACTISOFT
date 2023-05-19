@@ -10,14 +10,17 @@
 
 #define PIN_TIRETTE 2
 #define PIN_LED 6
+#define PIN_LED_DEGUISEMENT 10
 
 #define NB_LEDS (9 * 4)
+#define NB_LEDS_DEGUISEMENT 27
 
 uint32_t red = Adafruit_NeoPixel::Color(255, 0, 0);
 uint32_t purple = Adafruit_NeoPixel::Color(165, 50, 150);
 uint32_t blue = Adafruit_NeoPixel::Color(0, 92, 230);
 uint32_t green = Adafruit_NeoPixel::Color(0, 170, 18);
 Adafruit_NeoPixel pixels(NB_LEDS, PIN_LED, NEO_GRB);
+Adafruit_NeoPixel pixels_deguisement(NB_LEDS_DEGUISEMENT, PIN_LED_DEGUISEMENT, NEO_GRB);
 
 Sharp sharps[] = {
         Sharp(A0, DISTANCE_DETECTION),
@@ -49,7 +52,8 @@ int counter_ir = 0;
 
 enum Step {
     BOOT,
-    MATCH
+    MATCH,
+    END
 } step = BOOT;
 
 
@@ -63,6 +67,10 @@ void process_ir_event();
 
 void set_led_colors(uint32_t color);
 
+void deguisement();
+
+void whiteOverRainbow(int whiteSpeed, int whiteLength);
+
 void setup() {
     Serial.begin(9600);  // démarre le port série
 
@@ -74,6 +82,9 @@ void setup() {
 
     pixels.begin();
     pixels.setBrightness(255);
+
+    pixels_deguisement.begin();
+    pixels_deguisement.show();
 
     set_led_colors(purple);
 
@@ -197,6 +208,8 @@ void process_match_commands() {
             } else if (command_args == "purple") {
                 set_led_colors(purple);
             }
+        } else if (command_name == "finish_match") {
+            step = END;
         }
     }
 }
@@ -213,6 +226,56 @@ void loop() {
         case MATCH:
             match_loop();
             break;
+        case END:
+            set_led_colors(red);
+            deguisement();
+            break;
     }
     delay(10);
 }
+
+void deguisement() {
+    whiteOverRainbow(75, 5);
+}
+
+void whiteOverRainbow(int whiteSpeed, int whiteLength) {
+
+    if (whiteLength >= pixels_deguisement.numPixels()) whiteLength = pixels_deguisement.numPixels() - 1;
+
+    int head = whiteLength - 1;
+    int tail = 0;
+    int loops = 3;
+    int loopNum = 0;
+    uint32_t lastTime = millis();
+    uint32_t firstPixelHue = 0;
+
+    for (;;) { // Repeat forever (or until a 'break' or 'return')
+        for (int i = 0; i < pixels_deguisement.numPixels(); i++) {  // For each pixel in strip...
+            if (((i >= tail) && (i <= head)) ||      //  If between head & tail...
+                ((tail > head) && ((i >= tail) || (i <= head)))) {
+                pixels_deguisement.setPixelColor(i, pixels_deguisement.Color(0, 0, 0, 255)); // Set white
+            } else {                                             // else set rainbow
+                int pixelHue = firstPixelHue + (i * 65536L / pixels_deguisement.numPixels());
+                pixels_deguisement.setPixelColor(i, pixels_deguisement.gamma32(pixels_deguisement.ColorHSV(pixelHue)));
+            }
+        }
+
+        pixels_deguisement.show(); // Update strip with new contents
+        // There's no delay here, it just runs full-tilt until the timer and
+        // counter combination below runs out.
+
+        firstPixelHue += 40; // Advance just a little along the color wheel
+
+        if ((millis() - lastTime) > whiteSpeed) { // Time to update head/tail?
+            if (++head >= pixels_deguisement.numPixels()) {      // Advance head, wrap around
+                head = 0;
+                if (++loopNum >= loops) return;
+            }
+            if (++tail >= pixels_deguisement.numPixels()) {      // Advance tail, wrap around
+                tail = 0;
+            }
+            lastTime = millis();                   // Save time of last movement
+        }
+    }
+}
+

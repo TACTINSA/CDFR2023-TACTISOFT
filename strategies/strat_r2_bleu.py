@@ -25,7 +25,7 @@ async def run(robot: Robot):
     # robot.servos.set_servo_angle(1, 60)
     await robot.movement.async_move(direction=math.pi / 2, turn=-1, speed=100, duration=2.3)  # Etape4
     # await robot.movement.async_turn_right(speed=100, duration=1.40)
-    await robot.movement.async_forward(speed=100, duration=dist_to_time(290))  # Etape 5 TODO
+    await robot.movement.async_forward(speed=100, duration=dist_to_time(310))  # Etape 5 TODO
     await robot.movement.async_turn_right(speed=100, duration=1.4)  # Etape 6
     await robot.movement.async_forward(speed=100, duration=dist_to_time(170))  # Etape 7
     await robot.movement.async_backward(speed=100, duration=dist_to_time(150))  # Etape 8
@@ -41,15 +41,15 @@ async def run(robot: Robot):
     robot.servos.set_servo_angle(2, 70)
     time.sleep(0.5)
     robot.servos.set_servo_angle(2, 25)
-    time.sleep(2)
+    time.sleep(5)
     robot.servos.set_servo_angle(2, 70)
     time.sleep(0.5)
 
     await robot.movement.async_backward(speed=100, duration=dist_to_time(350))  # Etape 14
-    await robot.movement.async_left(speed=100, duration=dist_to_time(1650+200))  # Etape 15#156cm de déplacement
+    await robot.movement.async_left(speed=100, duration=dist_to_time(1650 + 200))  # Etape 15#156cm de déplacement
     await robot.movement.async_forward(speed=100, duration=dist_to_time(450))  # Etape 16
 
-    robot.score = 41
+    robot.score = 49  # TODO estimation
 
     robot.servos.set_servo_angle(0, 10)
     robot.servos.set_servo_angle(1, 175)
