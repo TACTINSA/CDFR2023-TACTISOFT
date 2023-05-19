@@ -166,10 +166,10 @@ class OmniMovement:
         else:
             self.send_command(motors.stop(motor_id))
 
-    def angle_0(self, speed: int, duration: int = None): # direction mouton minecraft, IR_1 A8
+    def angle_0(self, speed: int, duration: int = None):  # direction mouton minecraft, IR_1 A8
         self.set_direction("angle_0")
-        self.move_wheel(self.motor_ids.mot1, speed, direction = False)
-        self.move_wheel(self.motor_ids.mot2, speed, direction = True)
+        self.move_wheel(self.motor_ids.mot1, speed, direction=False)
+        self.move_wheel(self.motor_ids.mot2, speed, direction=True)
         self.send_command(motors.stop(self.motor_ids.mot3))
 
     def angle_60(self, speed: int, duration: int = None):  # direction bouton choix équipe, IR_2 A11
@@ -184,10 +184,10 @@ class OmniMovement:
         self.send_command(motors.stop(self.motor_ids.mot2))
         self.move_wheel(self.motor_ids.mot3, speed, direction=False)
 
-    def angle_180(self, speed: int, duration: int = None): # direction bouton arrêt d'urgence, IR_6 A13
+    def angle_180(self, speed: int, duration: int = None):  # direction bouton arrêt d'urgence, IR_6 A13
         self.set_direction("angle_180")
-        self.move_wheel(self.motor_ids.mot1, speed, direction = True)
-        self.move_wheel(self.motor_ids.mot2, speed, direction = False)
+        self.move_wheel(self.motor_ids.mot1, speed, direction=True)
+        self.move_wheel(self.motor_ids.mot2, speed, direction=False)
         self.send_command(motors.stop(self.motor_ids.mot3))
 
     def angle_240(self, speed: int, duration: int = None):  # direction batterie actionneurs, IR_3 A9
@@ -214,8 +214,6 @@ class OmniMovement:
         self.move_wheel(self.motor_ids.mot2, speed, direction=True)
         self.move_wheel(self.motor_ids.mot3, speed, direction=True)
 
-
-
     def stop(self):
         self.send_command(motors.stop(self.motor_ids.mot1))
         self.send_command(motors.stop(self.motor_ids.mot2))
@@ -226,20 +224,21 @@ class OmniMovement:
         self.direction = direction
 
     def move(self, direction: Optional[float], speed: int, turn: float = 0, distance: int = None):
-        if math.pi / 3 < distance <= 2 * math.pi / 3 :
-            self.angle_0(speed)
-        elif 2 * math.pi / 3 < distance <= math.pi :
-            self.angle_60(speed)
-        elif -math.pi  < distance <= - 2 * math.pi / 3 :
-            self.angle_120(speed)
-        elif - 2 * math.pi / 3 < distance <= - math.pi / 3 :
-            self.angle_180(speed)
-        elif - math.pi / 3 < distance <= 0:
-            self.angle_240(speed)
-        elif 0 < distance <= math.pi / 3 :
-            self.angle_300(speed)
-
-
-
-
-
+        if direction is not None:
+            if math.pi / 3 < direction <= 2 * math1.pi / 3:
+                self.angle_0(speed)
+            elif 2 * math.pi / 3 < direction <= math.pi:
+                self.angle_300(speed)
+            elif -math.pi < direction <= - 2 * math.pi / 3:
+                self.angle_240(speed)
+            elif - 2 * math.pi / 3 < direction <= - math.pi / 3:
+                self.angle_180(speed)
+            elif - math.pi / 3 < direction <= 0:
+                self.angle_120(speed)
+            elif 0 < direction <= math.pi / 3:
+                self.angle_60(speed)
+        elif turn is not None:
+            if turn > 0:
+                self.rotation_droite(speed)
+            elif turn < 0:
+                self.rotation_gauche(speed)
