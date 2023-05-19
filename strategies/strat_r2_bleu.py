@@ -25,7 +25,7 @@ async def run(robot: Robot):
     # robot.servos.set_servo_angle(1, 60)
     await robot.movement.async_move(direction=math.pi / 2, turn=-1, speed=100, duration=2.3)  # Etape4
     # await robot.movement.async_turn_right(speed=100, duration=1.40)
-    await robot.movement.async_forward(speed=100, duration=dist_to_time(290))  # Etape 5 TODO
+    await robot.movement.async_forward(speed=100, duration=dist_to_time(310))  # Etape 5 TODO
     await robot.movement.async_turn_right(speed=100, duration=1.4)  # Etape 6
     await robot.movement.async_forward(speed=100, duration=dist_to_time(170))  # Etape 7
     await robot.movement.async_backward(speed=100, duration=dist_to_time(150))  # Etape 8
