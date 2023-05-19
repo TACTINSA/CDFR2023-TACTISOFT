@@ -88,8 +88,7 @@ def get_score():
     score = process.returncode if process else None
     if score is not None:
         score = score - 1000
-    if score is not None and not (0 <= score <= 200):
-        print("ABC", score)
+    if score is not None:  # and not (0 <= score <= 200):
         score = DEFAULT_SCORE
     print("get_score", score)
     return json.dumps({"status": "ok", "score": score})
