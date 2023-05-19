@@ -216,14 +216,6 @@ class OmniMovement:
 
 
 
-
-
-    def turn_right(self, speed: int, distance: int = None):
-        self.move(direction=None, speed=speed, turn=1, distance=distance)
-
-    def turn_left(self, speed: int, distance: int = None):
-        self.move(direction=None, speed=speed, turn=-1, distance=distance)
-
     def stop(self):
         self.send_command(motors.stop(self.motor_ids.mot1))
         self.send_command(motors.stop(self.motor_ids.mot2))
@@ -232,4 +224,22 @@ class OmniMovement:
     def set_direction(self, direction: str):
         self.arduino.send("R1+set_ir_direction=%s" % direction)
         self.direction = direction
+
+    def move(self, direction: Optional[float], speed: int, turn: float = 0, distance: int = None):
+        if math.pi / 3 < distance <= 2 * math.pi / 3 :
+            self.angle_0(speed)
+        elif 2 * math.pi / 3 < distance <= math.pi :
+            self.angle_60(speed)
+        elif -math.pi  < distance <= - 2 * math.pi / 3 :
+            self.angle_120(speed)
+        elif - 2 * math.pi / 3 < distance <= - math.pi / 3 :
+            self.angle_180(speed)
+        elif - math.pi / 3 < distance <= 0:
+            self.angle_240(speed)
+        elif 0 < distance <= math.pi / 3 :
+            self.angle_300(speed)
+
+
+
+
 

@@ -36,7 +36,7 @@ def stop_match():
     robot.arduino.send(robot.prefix + "finish_match")
     robot.movement.stop()
 
-    logging.info("Match finished (" + str(robot.score) + ")")
+    logging.info("Match terminated (" + str(robot.score) + ")")
     exit(1000 + robot.score)
 
 
