@@ -19,19 +19,19 @@ async def run(robot: Robot):
     # ouverture pince
     robot.servos.set_servo_angle(0, 120)
     robot.servos.set_servo_angle(1, 60)
-    await robot.movement.async_forward(speed=100, duration=dist_to_time(870))  # etape3
+    await robot.movement.async_forward(speed=100, duration=dist_to_time(830))  # etape3 TODO
     # robot.servos.set_servo_angle(0, 120)
     # robot.servos.set_servo_angle(1, 60)
-    await robot.movement.async_move(direction=math.pi / 2, turn=1, speed=100, duration=2.3)  # Etape4
+    await robot.movement.async_move(direction=math.pi / 2, turn=1, speed=100, duration=2.5)  # Etape4
     # await robot.movement.async_turn_right(speed=100, duration=1.40)
-    await robot.movement.async_forward(speed=100, duration=dist_to_time(380))  # Etape 5
-    await robot.movement.async_turn_left(speed=100, duration=1.2)  # Etape 6
-    await robot.movement.async_forward(speed=100, duration=dist_to_time(130))  # Etape 7
+    await robot.movement.async_forward(speed=100, duration=dist_to_time(350))  # Etape 5
+    await robot.movement.async_turn_left(speed=100, duration=1.3)  # Etape 6
+    await robot.movement.async_forward(speed=100, duration=dist_to_time(200))  # Etape 7
     await robot.movement.async_backward(speed=100, duration=dist_to_time(150))  # Etape 8
     # fermeture pince
     robot.servos.set_servo_angle(0, 10)
     robot.servos.set_servo_angle(1, 175)
-    await robot.movement.async_turn_left(speed=100, duration=1.4)  # Etape 9
+    await robot.movement.async_turn_left(speed=100, duration=1.6)  # Etape 9
     await robot.movement.async_forward(speed=100, duration=dist_to_time(270))  # Etape 10
     await robot.movement.async_right(speed=100, duration=dist_to_time(670), stop_ir_after=0)  # Etape 11
     await robot.movement.async_backward(speed=100, duration=dist_to_time(350), stop_ir_after=0)  # Etape 12
