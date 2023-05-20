@@ -9,7 +9,7 @@ from typing import Optional
 from flask import Flask, json, request, send_from_directory
 from flask_cors import CORS
 
-DEFAULT_SCORE = 49  # TODO estimation
+DEFAULT_SCORE = 58  # TODO estimation
 
 app = Flask(__name__)
 CORS(app)
