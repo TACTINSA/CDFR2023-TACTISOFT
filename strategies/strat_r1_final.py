@@ -65,37 +65,40 @@ async def strat_vert(robot: Robot):
     set_pince_commande(robot, 5, "STANDBY")
     set_pince_commande(robot, 6, "STANDBY")
 
-    await robot.movement.async_angle_0(110, 4.7)  # Etape 1
-    await robot.movement.async_rotation_gauche(115, 9.45 / 2 / 4)  # Etape 2
     set_pince_commande(robot, 1, "OUVERTURE")
-    await robot.movement.async_angle_0(110, 10)  # étape 3
+    await robot.movement.async_angle_0(110, 4.7)  # Etape 1
     set_pince_commande(robot, 1, "FERMETURE")
     time.sleep(0.5)
-    await robot.movement.async_rotation_gauche(115, 9.45 / 2 / 12)  # étape 4
+    await robot.movement.async_rotation_gauche(115, 9.45 / 2 /3)  # Etape 2
     set_pince_commande(robot, 2, "OUVERTURE")
     time.sleep(0.5)
-    await robot.movement.async_angle_120(110, 2.5)  # étape 5
+    await robot.movement.async_angle_120(110, 2)  # Etape 1
     set_pince_commande(robot, 2, "FERMETURE")
     time.sleep(0.5)
-    await robot.movement.async_rotation_gauche(115, 9.45 / 2 / 6)  # étape 6
+    await robot.movement.async_rotation_gauche(115, 9.45 / 2 /6)  # Etape 2
     set_pince_commande(robot, 3, "OUVERTURE")
-    await robot.movement.async_angle_240(110, 5)  # étape 7
+    await robot.movement.async_angle_240(110, 6)  # Etape 1
     set_pince_commande(robot, 3, "FERMETURE")
     time.sleep(0.5)
-    await robot.movement.async_angle_300(110, 6)  # étape 8
-    await robot.movement.async_angle_0(110, 3.5)  # étape 9
+    await robot.movement.async_angle_300(110, 5)  # Etape 1
+    await robot.movement.async_angle_0(110, 4.5)  # Etape 1
+
     set_pince_commande(robot, 1, "OUVERTURE")
+    time.sleep(0.5)
     await robot.movement.async_angle_180(110, 1.5)  # étape 10
     await robot.movement.async_rotation_gauche(115, 9.45 / 2 / 3)  # étape 11
     await robot.movement.async_angle_120(110, 1)  # étape 12
     set_pince_commande(robot, 2, "OUVERTURE")
+    time.sleep(0.5)
     await robot.movement.async_angle_300(110, 1)  # étape 13
     await robot.movement.async_rotation_gauche(115, 9.45 / 2 / 3)  # étape 14
-    await robot.movement.async_angle_240(110, 1)  # étape 15
+    await robot.movement.async_angle_60(110, 1)  # étape 15
     set_pince_commande(robot, 3, "OUVERTURE")
-    await robot.movement.async_angle_120(110, 5)  # étape 16
-    await robot.movement.async_angle_60(110, 1)  # étape 17
+    time.sleep(0.5)
+    await robot.movement.async_angle_180(110, 1)  # étape 13
+    # time.sleep(18) # TODO Add to make robot wait for the other one
 
+    await robot.movement.async_angle_120(110, 4.2)  # étape 13
 
 
 
