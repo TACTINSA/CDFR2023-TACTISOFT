@@ -53,7 +53,7 @@ async def strat_bleu(robot: Robot):
     set_pince_commande(robot, 1, "OUVERTURE")
     time.sleep(0.5)
     await robot.movement.async_angle_180(110, 1)  # étape 13
-    time.sleep(18)
+    # time.sleep(18) # TODO Add to make robot wait for the other one
     await robot.movement.async_angle_120(110, 4.2)  # étape 13
 
 
