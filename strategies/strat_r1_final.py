@@ -54,8 +54,7 @@ async def strat_bleu(robot: Robot):
     time.sleep(0.5)
     await robot.movement.async_angle_180(110, 1)  # étape 13
     # time.sleep(18) # TODO Add to make robot wait for the other one
-    await robot.movement.async_angle_120(110, 4.2)  # étape 13
-
+    await robot.movement.async_angle_120(110, 4.7)  # étape 13
 
 async def strat_vert(robot: Robot):
     set_pince_commande(robot, 1, "STANDBY")
@@ -92,16 +91,12 @@ async def strat_vert(robot: Robot):
     time.sleep(0.5)
     await robot.movement.async_angle_300(110, 1)  # étape 13
     await robot.movement.async_rotation_gauche(115, 9.45 / 2 / 3)  # étape 14
-    await robot.movement.async_angle_60(110, 1)  # étape 15
+    await robot.movement.async_angle_240(110, 1)  # étape 15
     set_pince_commande(robot, 3, "OUVERTURE")
     time.sleep(0.5)
-    await robot.movement.async_angle_180(110, 1)  # étape 13
+    await robot.movement.async_angle_60(110, 1)  # étape 13
     # time.sleep(18) # TODO Add to make robot wait for the other one
-
-    await robot.movement.async_angle_120(110, 4.2)  # étape 13
-
-
-
+    await robot.movement.async_angle_120(110, 5.5)  # étape 13
 
 async def run(robot: Robot):
     robot.arduino.send("R1+get_team")
