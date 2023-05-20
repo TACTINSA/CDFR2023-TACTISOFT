@@ -152,6 +152,7 @@ class OmniMovement:
         self.serial = serial
         self.direction = "none"
         self.arduino = arduino
+        self.obstacle_is_detected_flag = False
 
     def send_command(self, command):
         self.serial.send(bytes.fromhex(command))
@@ -172,11 +173,61 @@ class OmniMovement:
         self.move_wheel(self.motor_ids.mot2, speed, direction=True)
         self.send_command(motors.stop(self.motor_ids.mot3))
 
+    async def async_angle_0(self, speed: int, duration: int = None, stop_ir_after: int = None):  # direction mouton minecraft, IR_1 A8
+        start_time = time.time()
+        self.angle_0(speed=speed)
+
+        while time.time() - start_time < duration:
+            if self.obstacle_is_detected_flag:
+                if stop_ir_after is not None and time.time() - start_time > stop_ir_after:
+                    continue
+                else:
+                    duration = duration - (time.time() - start_time)
+                    if stop_ir_after is not None:
+                        stop_ir_after = stop_ir_after - (time.time() - start_time)
+
+                    self.stop()
+                    while self.obstacle_is_detected_flag:
+                        self.obstacle_is_detected_flag = False
+                        await asyncio.sleep(1)
+                    start_time = time.time()
+                    self.angle_0(speed=speed)
+
+            await asyncio.sleep(0.1)
+
+        self.stop()
+        self.arduino.send("R2+set_ir_direction=none")
+
     def angle_60(self, speed: int, duration: int = None):  # direction bouton choix équipe, IR_2 A11
         self.set_direction("angle_60")
         self.send_command(motors.stop(self.motor_ids.mot1))
         self.move_wheel(self.motor_ids.mot2, speed, direction=True)
         self.move_wheel(self.motor_ids.mot3, speed, direction=False)
+
+    async def async_angle_60(self, speed: int, duration: int = None, stop_ir_after: int = None):  # direction mouton minecraft, IR_1 A8
+        start_time = time.time()
+        self.angle_60(speed=speed)
+
+        while time.time() - start_time < duration:
+            if self.obstacle_is_detected_flag:
+                if stop_ir_after is not None and time.time() - start_time > stop_ir_after:
+                    continue
+                else:
+                    duration = duration - (time.time() - start_time)
+                    if stop_ir_after is not None:
+                        stop_ir_after = stop_ir_after - (time.time() - start_time)
+
+                    self.stop()
+                    while self.obstacle_is_detected_flag:
+                        self.obstacle_is_detected_flag = False
+                        await asyncio.sleep(1)
+                    start_time = time.time()
+                    self.angle_60(speed=speed)
+
+            await asyncio.sleep(0.1)
+
+        self.stop()
+        self.arduino.send("R2+set_ir_direction=none")
 
     def angle_120(self, speed: int, duration: int = None):  # direction batterie logique, IR_5 A10
         self.set_direction("angle_120")
@@ -184,11 +235,61 @@ class OmniMovement:
         self.send_command(motors.stop(self.motor_ids.mot2))
         self.move_wheel(self.motor_ids.mot3, speed, direction=False)
 
+    async def async_angle_120(self, speed: int, duration: int = None, stop_ir_after: int = None):  # direction mouton minecraft, IR_1 A8
+        start_time = time.time()
+        self.angle_120(speed=speed)
+
+        while time.time() - start_time < duration:
+            if self.obstacle_is_detected_flag:
+                if stop_ir_after is not None and time.time() - start_time > stop_ir_after:
+                    continue
+                else:
+                    duration = duration - (time.time() - start_time)
+                    if stop_ir_after is not None:
+                        stop_ir_after = stop_ir_after - (time.time() - start_time)
+
+                    self.stop()
+                    while self.obstacle_is_detected_flag:
+                        self.obstacle_is_detected_flag = False
+                        await asyncio.sleep(1)
+                    start_time = time.time()
+                    self.angle_120(speed=speed)
+
+            await asyncio.sleep(0.1)
+
+        self.stop()
+        self.arduino.send("R2+set_ir_direction=none")
+
     def angle_180(self, speed: int, duration: int = None):  # direction bouton arrêt d'urgence, IR_6 A13
         self.set_direction("angle_180")
         self.move_wheel(self.motor_ids.mot1, speed, direction=True)
         self.move_wheel(self.motor_ids.mot2, speed, direction=False)
         self.send_command(motors.stop(self.motor_ids.mot3))
+
+    async def async_angle_180(self, speed: int, duration: int = None, stop_ir_after: int = None):  # direction mouton minecraft, IR_1 A8
+        start_time = time.time()
+        self.angle_180(speed=speed)
+
+        while time.time() - start_time < duration:
+            if self.obstacle_is_detected_flag:
+                if stop_ir_after is not None and time.time() - start_time > stop_ir_after:
+                    continue
+                else:
+                    duration = duration - (time.time() - start_time)
+                    if stop_ir_after is not None:
+                        stop_ir_after = stop_ir_after - (time.time() - start_time)
+
+                    self.stop()
+                    while self.obstacle_is_detected_flag:
+                        self.obstacle_is_detected_flag = False
+                        await asyncio.sleep(1)
+                    start_time = time.time()
+                    self.angle_180(speed=speed)
+
+            await asyncio.sleep(0.1)
+
+        self.stop()
+        self.arduino.send("R2+set_ir_direction=none")
 
     def angle_240(self, speed: int, duration: int = None):  # direction batterie actionneurs, IR_3 A9
         self.set_direction("angle_240")
@@ -196,11 +297,61 @@ class OmniMovement:
         self.move_wheel(self.motor_ids.mot2, speed, direction=False)
         self.move_wheel(self.motor_ids.mot3, speed, direction=True)
 
+    async def async_angle_240(self, speed: int, duration: int = None, stop_ir_after: int = None):  # direction mouton minecraft, IR_1 A8
+        start_time = time.time()
+        self.angle_240(speed=speed)
+
+        while time.time() - start_time < duration:
+            if self.obstacle_is_detected_flag:
+                if stop_ir_after is not None and time.time() - start_time > stop_ir_after:
+                    continue
+                else:
+                    duration = duration - (time.time() - start_time)
+                    if stop_ir_after is not None:
+                        stop_ir_after = stop_ir_after - (time.time() - start_time)
+
+                    self.stop()
+                    while self.obstacle_is_detected_flag:
+                        self.obstacle_is_detected_flag = False
+                        await asyncio.sleep(1)
+                    start_time = time.time()
+                    self.angle_240(speed=speed)
+
+            await asyncio.sleep(0.1)
+
+        self.stop()
+        self.arduino.send("R2+set_ir_direction=none")
+
     def angle_300(self, speed: int, duration: int = None):  # direction tirette, IR_4 A12
         self.set_direction("angle_300")
         self.move_wheel(self.motor_ids.mot1, speed, direction=False)
         self.send_command(motors.stop(self.motor_ids.mot2))
         self.move_wheel(self.motor_ids.mot3, speed, direction=True)
+
+    async def async_angle_300(self, speed: int, duration: int = None, stop_ir_after: int = None):  # direction mouton minecraft, IR_1 A8
+        start_time = time.time()
+        self.angle_300(speed=speed)
+
+        while time.time() - start_time < duration:
+            if self.obstacle_is_detected_flag:
+                if stop_ir_after is not None and time.time() - start_time > stop_ir_after:
+                    continue
+                else:
+                    duration = duration - (time.time() - start_time)
+                    if stop_ir_after is not None:
+                        stop_ir_after = stop_ir_after - (time.time() - start_time)
+
+                    self.stop()
+                    while self.obstacle_is_detected_flag:
+                        self.obstacle_is_detected_flag = False
+                        await asyncio.sleep(1)
+                    start_time = time.time()
+                    self.angle_300(speed=speed)
+
+            await asyncio.sleep(0.1)
+
+        self.stop()
+        self.arduino.send("R2+set_ir_direction=none")
 
     def rotation_gauche(self, speed: int, duration: int = None):
         self.set_direction("rotation_gauche")
@@ -208,11 +359,62 @@ class OmniMovement:
         self.move_wheel(self.motor_ids.mot2, speed, direction=False)
         self.move_wheel(self.motor_ids.mot3, speed, direction=False)
 
+    async def async_rotation_gauche(self, speed: int, duration: int = None, stop_ir_after: int = None):  # direction mouton minecraft, IR_1 A8
+        start_time = time.time()
+        self.rotation_gauche(speed=speed)
+
+        while time.time() - start_time < duration:
+            if self.obstacle_is_detected_flag:
+                if stop_ir_after is not None and time.time() - start_time > stop_ir_after:
+                    continue
+                else:
+                    duration = duration - (time.time() - start_time)
+                    if stop_ir_after is not None:
+                        stop_ir_after = stop_ir_after - (time.time() - start_time)
+
+                    self.stop()
+                    while self.obstacle_is_detected_flag:
+                        self.obstacle_is_detected_flag = False
+                        await asyncio.sleep(1)
+                    start_time = time.time()
+                    self.rotation_gauche(speed=speed)
+
+            await asyncio.sleep(0.1)
+
+        self.stop()
+        self.arduino.send("R2+set_ir_direction=none")
+
+
     def rotation_droite(self, speed: int, duration: int = None):
         self.set_direction("rotation_gauche")
         self.move_wheel(self.motor_ids.mot1, speed, direction=True)
         self.move_wheel(self.motor_ids.mot2, speed, direction=True)
         self.move_wheel(self.motor_ids.mot3, speed, direction=True)
+
+    async def async_rotation_droite(self, speed: int, duration: int = None, stop_ir_after: int = None):  # direction mouton minecraft, IR_1 A8
+        start_time = time.time()
+        self.rotation_droite(speed=speed)
+
+        while time.time() - start_time < duration:
+            if self.obstacle_is_detected_flag:
+                if stop_ir_after is not None and time.time() - start_time > stop_ir_after:
+                    continue
+                else:
+                    duration = duration - (time.time() - start_time)
+                    if stop_ir_after is not None:
+                        stop_ir_after = stop_ir_after - (time.time() - start_time)
+
+                    self.stop()
+                    while self.obstacle_is_detected_flag:
+                        self.obstacle_is_detected_flag = False
+                        await asyncio.sleep(1)
+                    start_time = time.time()
+                    self.rotation_droite(speed=speed)
+
+            await asyncio.sleep(0.1)
+
+        self.stop()
+        self.arduino.send("R2+set_ir_direction=none")
 
     def stop(self):
         self.send_command(motors.stop(self.motor_ids.mot1))
@@ -225,7 +427,7 @@ class OmniMovement:
 
     def move(self, direction: Optional[float], speed: int, turn: float = 0, distance: int = None):
         if direction is not None:
-            if math.pi / 3 < direction <= 2 * math1.pi / 3:
+            if math.pi / 3 < direction <= 2 * math.pi / 3:
                 self.angle_0(speed)
             elif 2 * math.pi / 3 < direction <= math.pi:
                 self.angle_300(speed)

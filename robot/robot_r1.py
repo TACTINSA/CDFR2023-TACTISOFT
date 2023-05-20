@@ -16,7 +16,6 @@ class Robot(SharedRobot):
         self.movement = OmniMovement(self.motors_serial, self.motors_ids, self.arduino)
         self.team = "unknown"
 
-
     def on_arduino_message(self, message):
         message: str = message
         if super().on_arduino_message(message):  # If handled by super don't handle the message
@@ -24,10 +23,7 @@ class Robot(SharedRobot):
         elif message.startswith("team"):
             self.team = message[5:]
         elif message.startswith("obstacle+%s" % self.movement.direction):
-            # self.movement.obstacle_is_detected_flag = True
-            while True:
-                self.movement.stop()
-                time.sleep(0.1)
+            self.movement.obstacle_is_detected_flag = True
 
     def on_motor_message(self, message):
         logging.debug("Motors -> Robot: " + " ".join(["{:02x}".format(x) for x in message]))

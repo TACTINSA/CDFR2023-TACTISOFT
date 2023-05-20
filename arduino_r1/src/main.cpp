@@ -269,6 +269,8 @@ void process_match_commands() {
             } else if (command_args == "red") {
                 couleur_LEDS(rouge);
             }
+        } else if (command_name == "finish_match") {
+            couleur_LEDS(pas_dequipe);
         }
     }
 }
