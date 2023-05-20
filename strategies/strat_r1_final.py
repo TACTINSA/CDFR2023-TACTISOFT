@@ -97,7 +97,7 @@ async def strat_vert(robot: Robot):
     await robot.movement.async_angle_60(110, 1)  # étape 13
     # time.sleep(18) # TODO Add to make robot wait for the other one
     await robot.movement.async_angle_120(110, 5.5)  # étape 13
-
+    # end
 async def run(robot: Robot):
     robot.arduino.send("R1+get_team")
     time.sleep(0.2)
