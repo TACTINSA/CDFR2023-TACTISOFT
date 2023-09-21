@@ -4,6 +4,7 @@ import math
 import time
 from typing import Optional
 
+from tacticom import TactiCom
 from tactisoft import motors
 from tactisoft.motors import Motors4, Direction, Motors3
 from tactisoft.threadedserial import ThreadedSerial
@@ -15,7 +16,7 @@ def get_direction(speed: float, inverted: bool) -> Direction:
 
 
 class MecanumMovement:
-    def __init__(self, serial: ThreadedSerial, motor_ids: Motors4, arduino: ThreadedSerial):
+    def __init__(self, serial: ThreadedSerial, motor_ids: Motors4, arduino: TactiCom):
         self.obstacle_is_detected_flag = False
         self.motor_ids = motor_ids
         self.serial = serial
@@ -89,7 +90,7 @@ class MecanumMovement:
             await asyncio.sleep(0.1)
 
         self.stop()
-        self.arduino.send("R2+set_ir_direction=none")
+        self.arduino.send("set_ir_direction", "none")
 
     def forward(self, speed: int, distance: int = None):
         self.move(direction=math.pi / 2, speed=speed, distance=distance)
@@ -139,7 +140,7 @@ class MecanumMovement:
 
     async def async_stop(self):
         self.stop()
-        self.arduino.send("R2+set_ir_direction=none")
+        self.arduino.send("set_ir_direction", "none")
 
     def set_direction(self, direction: str):
         self.arduino.send("R2+set_ir_direction=%s" % direction)

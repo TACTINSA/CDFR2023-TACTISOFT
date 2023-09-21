@@ -1,6 +1,8 @@
 import logging
 import threading
 
+from tacticom import TactiCom
+
 from tactisoft.cli import NonBlockingCLI
 from tactisoft.threadedserial import ThreadedSerial
 
@@ -11,12 +13,12 @@ class SharedRobot:
     def __init__(self, name, prefix):
         self.name = name
         self.prefix = prefix
-        self.arduino = ThreadedSerial("/dev/arduino", 9600, on_message=self.on_arduino_message, raw=False, prefix=self.prefix)
-        self.score = 49 # TODO estimation
+        self.arduino = TactiCom(self.prefix, "/dev/arduino", 9600, self.on_command)
+        self.score = 49  # TODO estimation
 
-    def on_arduino_message(self, message) -> bool:
-        logging.debug("Arduino -> Robot: " + message)
-        if message.startswith("START"):
+    def on_command(self, command: str, args: list):
+        logging.debug("Arduino -> Robot: " + command + " with args: " + str(args))
+        if command == "START":
             self.match_started.set()  # Set the event to start the match
         else:
             return False  # If not handled, return false

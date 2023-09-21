@@ -21,10 +21,10 @@ class Robot(SharedRobot):
 
         self.previous_encoder_value = 0
 
-    def on_arduino_message(self, message):
-        if super().on_arduino_message(message):  # If handled by super don't handle the message
+    def on_command(self, command: str, args: list):
+        if super().on_command(command, args):  # If handled by super don't handle the message
             return
-        elif message.startswith("obstacle+%s" % self.movement.direction):
+        elif command == ("obstacle+%s" % self.movement.direction):
             self.movement.obstacle_is_detected_flag = True
 
     def on_motor_message(self, message):

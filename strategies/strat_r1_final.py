@@ -6,11 +6,11 @@ from robot.robot_r1 import Robot
 
 def set_pince_commande(robot: Robot, pince: int, commande: str):
     if commande == "OUVERTURE":
-        robot.arduino.send("R1+set_pince_commande=%s,%s" % (pince, 250))
+        robot.arduino.send("set_pince_commande", pince, 250)
     elif commande == "STANDBY":
-        robot.arduino.send("R1+set_pince_commande=%s,%s" % (pince, 0))
+        robot.arduino.send("set_pince_commande", pince, 0)
     elif commande == "FERMETURE":
-        robot.arduino.send("R1+set_pince_commande=%s,%s" % (pince, 150))
+        robot.arduino.send("set_pince_commande", pince, 150)
 
 
 async def strat_bleu(robot: Robot):
@@ -99,7 +99,7 @@ async def strat_vert(robot: Robot):
     await robot.movement.async_angle_120(110, 5.5)  # étape 13
     # end
 async def run(robot: Robot):
-    robot.arduino.send("R1+get_team")
+    robot.arduino.send("get_team")
     time.sleep(0.2)
 
     if robot.team == "bleu":

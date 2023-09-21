@@ -8,6 +8,6 @@ from robot.robot_r2 import Robot
 # pont levis : 70, 25
 
 async def run(robot: Robot):
-    robot.arduino.send("R2+set_led_color=blue")
+    robot.arduino.send("set_led_color", "blue")
 
     robot.score = 20

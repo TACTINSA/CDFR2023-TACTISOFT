@@ -1,11 +1,12 @@
 #include <Arduino.h>
 #include <Adafruit_NeoPixel.h>
+#include <tacticom.h>
 
 #include <servos/Software_I2C_Adafruit_PWMServoDriver.h>
 #include "sharps/sharp.h"
 #include "servos/servo.h"
 
-#define COMMAND_PREFIX "R2+"
+#define COMMAND_PREFIX "R2"
 #define DISTANCE_DETECTION 20
 
 #define PIN_TIRETTE 2
@@ -71,6 +72,10 @@ void deguisement();
 
 void whiteOverRainbow(int whiteSpeed, int whiteLength);
 
+void router(const String &name, const String args[], uint8_t args_count);
+
+Tacticom tacticom(router, COMMAND_PREFIX);
+
 void setup() {
     Serial.begin(9600);  // démarre le port série
 
@@ -100,6 +105,9 @@ void set_led_colors(uint32_t color) {
 }
 
 void match_loop() {
+    // Process serial commands
+    tacticom.tick();
+
     // Update obstacles sensors
     for (Sharp &sharp: sharps) {
         sharp.tick();
@@ -108,9 +116,6 @@ void match_loop() {
     for (Servo &servo: servos) {
         servo.tick();
     }
-
-    // Process serial commands
-    process_match_commands();
 
     if (counter_ir++ % 50 == 0) {
         process_ir_event();
@@ -160,57 +165,46 @@ void process_ir_event() {
     }
 }
 
-void process_match_commands() {
-    if (Serial.available() <= 0) return; // No data available
+void router(const String &name, const String args[], uint8_t args_count) {
+    if (name == "ping") {
+        tacticom.send("pong");
+    } else if (name == "set_ir_direction") {
+        if (args_count != 1)
+            return;
 
-    String command = Serial.readStringUntil('\n');
-    command.trim();
-
-    if (command.startsWith(COMMAND_PREFIX)) {
-        command = command.substring(strlen(COMMAND_PREFIX));
-
-        String command_name;
-        String command_args;
-
-        if (command.indexOf('=') == -1) {
-            command_name = command;
-            command_args = "";
-        } else {
-            command_name = command.substring(0, command.indexOf('='));
-            command_args = command.substring(command.indexOf('=') + 1);
+        if (args[0] == "forward") {
+            check_direction = FORWARD;
+        } else if (args[0] == "backward") {
+            check_direction = BACKWARD;
+        } else if (args[0] == "left") {
+            check_direction = LEFT;
+        } else if (args[0] == "right") {
+            check_direction = RIGHT;
+        } else if (args[0] == "none") {
+            check_direction = NONE;
         }
+    } else if (name == "set_servo_angle") {
+        if (args_count != 2)
+            return;
 
-        if (command_name == "ping") {
-            Serial.println("R2+pong");
-        } else if (command_name == "set_ir_direction") {
-            if (command_args == "forward") {
-                check_direction = FORWARD;
-            } else if (command_args == "backward") {
-                check_direction = BACKWARD;
-            } else if (command_args == "left") {
-                check_direction = LEFT;
-            } else if (command_args == "right") {
-                check_direction = RIGHT;
-            } else if (command_args == "none") {
-                check_direction = NONE;
-            }
-        } else if (command_name == "set_servo_angle") {
-            long servo = command_args.substring(0, command_args.indexOf(',')).toInt();
-            long angle = command_args.substring(command_args.indexOf(',') + 1).toInt();
-            servos[servo].set_angle(angle);
-        } else if (command_name == "set_led_color") {
-            if (command_args == "green") {
-                set_led_colors(green);
-            } else if (command_args == "blue") {
-                set_led_colors(blue);
-            } else if (command_args == "red") {
-                set_led_colors(red);
-            } else if (command_args == "purple") {
-                set_led_colors(purple);
-            }
-        } else if (command_name == "finish_match") {
-            step = END;
+        long servo = args[0].toInt();
+        long angle = args[1].toInt();
+        servos[servo].set_angle(angle);
+    } else if (name == "set_led_color") {
+        if (args_count != 1)
+            return;
+
+        if (args[0] == "green") {
+            set_led_colors(green);
+        } else if (args[0] == "blue") {
+            set_led_colors(blue);
+        } else if (args[0] == "red") {
+            set_led_colors(red);
+        } else if (args[0] == "purple") {
+            set_led_colors(purple);
         }
+    } else if (name == "finish_match") {
+        step = END;
     }
 }
 

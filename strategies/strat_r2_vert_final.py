@@ -13,7 +13,7 @@ def dist_to_time(distance: float):  # la distance est exprimé en mm et le temps
 
 
 async def run(robot: Robot):
-    robot.arduino.send("R2+set_led_color=green")
+    robot.arduino.send("set_led_color", "green")
     await robot.movement.async_forward(speed=100, duration=dist_to_time(570))  # étape 1
     await robot.movement.async_turn_right(speed=100, duration=1.45)  # étape 2
     # ouverture pince
